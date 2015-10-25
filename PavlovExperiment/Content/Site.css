@@ -1,0 +1,128 @@
+﻿@import url(https://fonts.googleapis.com/css?family=Open+Sans);
+
+body{
+    font-family: 'Open Sans', sans-serif;
+    font-size: 18px;
+    margin:0;
+    padding:0;
+}
+
+table tr td{
+    vertical-align:top;
+    padding: 5px;
+}
+
+table tr td:first-child{
+    max-width:250px;
+}
+
+#main-menu{
+    position:absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+input[type=radio]{
+    display:none;
+}
+
+.menu, .options{
+    display:inline-block;
+}
+
+.options{
+    vertical-align:top;
+}
+
+.item{
+    cursor:pointer;
+}
+
+.btn{
+    text-align:center;
+    cursor:pointer;
+}
+
+.block{
+    display:block;
+}
+
+#symmetry-options, #transitivity-options, #equivalence-options{
+    display: none;
+}
+
+#context-options-pt, #context-options-e{
+    display: none;
+}
+
+#cues-pt:checked + #context-options-pt{
+    display:block;
+}
+
+#cues-e:checked + #context-options-e{
+    display:block;
+}
+
+#symmetry:checked + #symmetry-options{
+    display: block;
+}
+
+#transitivity:checked + #transitivity-options{
+    display: block;
+}
+
+#equivalence:checked + #equivalence-options{
+    display: block;
+}
+
+.loading{position:fixed;z-index:999;height:2em;width:2em;margin:auto;top:0;left:0;bottom:0;right:0}
+.loading:before{content:'';display:block;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.3);transition:all .3s}
+.loading:not(:required){font:0/0 a;color:transparent;text-shadow:none;background-color:transparent;border:0}
+.loading:not(:required):after{content:'';display:block;font-size:10px;width:1em;height:1em;margin-top:-.5em;-webkit-animation:spinner 1500ms infinite linear;-moz-animation:spinner 1500ms infinite linear;-o-animation:spinner 1500ms infinite linear;animation:spinner 1500ms infinite linear;border-radius:.5em;-webkit-box-shadow:rgba(0,0,0,0.75) 1.5em 0 0 0,rgba(0,0,0,0.75) 1.1em 1.1em 0 0,rgba(0,0,0,0.75) 0 1.5em 0 0,rgba(0,0,0,0.75) -1.1em 1.1em 0 0,rgba(0,0,0,0.5) -1.5em 0 0 0,rgba(0,0,0,0.5) -1.1em -1.1em 0 0,rgba(0,0,0,0.75) 0 -1.5em 0 0,rgba(0,0,0,0.75) 1.1em -1.1em 0 0;box-shadow:rgba(0,0,0,0.75) 1.5em 0 0 0,rgba(0,0,0,0.75) 1.1em 1.1em 0 0,rgba(0,0,0,0.75) 0 1.5em 0 0,rgba(0,0,0,0.75) -1.1em 1.1em 0 0,rgba(0,0,0,0.75) -1.5em 0 0 0,rgba(0,0,0,0.75) -1.1em -1.1em 0 0,rgba(0,0,0,0.75) 0 -1.5em 0 0,rgba(0,0,0,0.75) 1.1em -1.1em 0 0}
+@-webkit-keyframes spinner {
+0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}
+100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@-moz-keyframes spinner {
+0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}
+100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@-o-keyframes spinner {
+0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}
+100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
+}
+@keyframes spinner {
+0%{-webkit-transform:rotate(0deg);-moz-transform:rotate(0deg);-ms-transform:rotate(0deg);-o-transform:rotate(0deg);transform:rotate(0deg)}
+100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
+}
+
+.popup{
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(0, -50%);    
+    z-index: 2000;
+    width: 30%;
+    background: #FFF;
+    padding: 40px;
+    backface-visibility: hidden;
+}
+
+.popup.show{
+    opacity: 1;    
+    transform: translate(-50%,-50%);
+    transition: all 0.2s cubic-bezier(0.25, 0.5, 0.5, 0.9);
+}
+
+    .popup.show ~ .overlay {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        background: rgba(0, 0, 0, 0.5);
+        transition: all 0.2s linear;
+    }

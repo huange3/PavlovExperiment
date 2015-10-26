@@ -1,13 +1,26 @@
 ﻿// GLOBALS //////////////////////////////////////////////
 
+// DOM element labels incoming...
 var mainMenu = $("#main-menu");
 var parameterMenu = $("#parameters-menu");
 var parameterBtn = $("#parameters");
 var dataLogBtn = $("#data-log");
 var startExpBtn = $("#start-experiment");
-var popup = $(".popup");
+var popup = $("#popup");
 var popupText = $("#popup-text");
 var popupClose = $("#close-popup");
+var instruction = $("#instruction");
+var instructionText = $("#instruction-text");
+var instructionClose = $("#start-btn");
+var spinner = $(".loading");
+
+var firstLabel = $("#first-stimulus");
+var secondLabel = $("#second-stimulus");
+var nextBtn = $("#next-btn");
+var yesBtn = $("#yes-btn");
+var noBtn = $("#no-btn");
+var responseLabel = $("#response");
+var board = $("#board");
 
 var menuGeneralItem = $("#general-item");
 var menuPretrainingItem = $("#pretraining-item");
@@ -88,3 +101,48 @@ var equivRetrainLB = $("#equivalence-retrain");
 var equivLocation1LB = $("#equivalence-1");
 var equivLocation2LB = $("#equivalence-2");
 var equivLocation3LB = $("#equivalence-3");
+
+// MENU IDs
+const GeneralID = 0;
+const PretrainingID = 1;
+const TrainingID = 2;
+const EvaluationID = 3;
+
+// MODE IDs
+const PretrainingMode = 1;
+const TrainingMode = 2;
+const EvaluationMode = 3;
+const FullMode = 4;
+
+// PHASE IDs
+const PretrainingPhase = 1;
+const PretrainingEvalPhase = 2;
+const TrainingPhase = 3;
+const EvaluationPhase = 4;
+
+// LOCATION IDs
+const Center = 1;
+const TopLeft = 2;
+const TopRight = 3;
+const BottomLeft = 4;
+const BottomRight = 5;
+
+// TIMER INTERVALS
+var firstDuration = 0;
+var secondDuration = 0;
+var withinDuration = 0;
+var betweenDuration = 0;
+var latency = 0;
+
+// EXPERIMENT VARIABLES
+var currPhase = 0;
+var currTrial;
+var currStimulus;
+var stimulusList = [];
+var currInstructionText = "";
+var stopWatch = new clsStopwatch();
+var pretrainingTrials = [];
+var pretrainingEvalTrials = [];
+var trainingTrials = [];
+var evaluationTrials = [];
+var retrainingTrials = [];

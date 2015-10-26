@@ -23,7 +23,7 @@ table tr td:first-child{
     transform: translate(-50%,-50%);
 }
 
-input[type=radio]{
+.menu > input[type=radio]{
     display:none;
 }
 
@@ -42,10 +42,48 @@ input[type=radio]{
 .btn{
     text-align:center;
     cursor:pointer;
+    padding: 16px;
+    background: #3498db;
+    margin: 10px;
+    color: #FFF;
+}
+
+.btn:hover{
+    background: #4DADED;
 }
 
 .block{
     display:block;
+}
+
+#first-stimulus, #second-stimulus, #next-btn, #yes-btn, #no-btn, #response{
+    position:absolute;
+}
+
+.center{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);   
+}
+
+.top-left{
+    top: 25%;
+    left: 25%; 
+}
+
+.top-right{
+    top: 25%;
+    right: 25%; 
+}
+
+.bottom-left{
+    bottom: 25%;
+    left: 25%; 
+}
+
+.bottom-right{
+    bottom: 25%;
+    right: 25%; 
 }
 
 #symmetry-options, #transitivity-options, #equivalence-options{
@@ -97,7 +135,8 @@ input[type=radio]{
 100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
 }
 
-.popup{
+#popup, #instruction{
+    visibility: hidden;
     opacity: 0;
     position: absolute;
     top: 50%;
@@ -106,17 +145,21 @@ input[type=radio]{
     z-index: 2000;
     width: 30%;
     background: #FFF;
-    padding: 40px;
+    padding: 40px;   
     backface-visibility: hidden;
 }
 
-.popup.show{
+#popup{text-align:center}
+
+#popup.show, #instruction.show{
+
+    visibility: visible;
     opacity: 1;    
     transform: translate(-50%,-50%);
     transition: all 0.2s cubic-bezier(0.25, 0.5, 0.5, 0.9);
 }
 
-    .popup.show ~ .overlay {
+    #popup.show ~ .overlay, #instruction.show ~ .overlay {
         position: fixed;
         width: 100%;
         height: 100%;
@@ -126,3 +169,37 @@ input[type=radio]{
         background: rgba(0, 0, 0, 0.5);
         transition: all 0.2s linear;
     }
+
+#board{
+    position:fixed;
+    top:0;
+    left:0;
+    height: 100%;
+    width: 100%;
+    background: #FFF;
+}
+
+#first-stimulus, #second-stimulus{font-size: 64px}
+#response {font-size:64px}
+
+#yes-btn, #no-btn{
+    padding: 16px 60px;
+    color: #FFF;
+    cursor: pointer;
+}
+
+#yes-btn{
+    background: #27ae60;
+}
+
+#yes-btn:hover{
+    background: #1DA054;
+}
+
+#no-btn{
+    background: #e74c3c;
+}
+
+#no-btn:hover{
+    background: #DA3929;
+}

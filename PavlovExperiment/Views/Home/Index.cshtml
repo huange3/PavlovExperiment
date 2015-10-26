@@ -18,7 +18,7 @@
         </select>
 }
 
-<div>
+<div class="wrapper">
     @*  Main menu *@
     <div id="main-menu">
         <div id="parameters" class="btn block">Parameters</div>
@@ -51,6 +51,17 @@
                 <tr>
                     <td>Participant ID</td>
                     <td><input type="text" id="participant-id" /></td>
+                </tr>
+                <tr>
+                    <td>
+                        Experiment Mode
+                    </td>
+                    <td>
+                        <input type="radio" name="mode" id="mode-1" value="1"/><label for="mode-1" class="item">Pretraining</label><br />
+                        <input type="radio" name="mode" id="mode-2" value="2"/><label for="mode-2" class="item">Training</label><br />
+                        <input type="radio" name="mode" id="mode-3" value="3"/><label for="mode-3" class="item">Evaluation</label><br />
+                        <input type="radio" name="mode" id="mode-4" value="4"/><label for="mode-4" class="item">Full</label>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -376,10 +387,23 @@
     @*  Data access *@
 
     @*  Start experiment *@
+    <div id="board" style="display:none">
+        <div id="first-stimulus" style="display:none"></div>
+        <div id="second-stimulus" style="display:none"></div>
+
+        <div id="next-btn" class="btn block center" style="display:none">Present the Next Pair</div>
+        <div id="yes-btn" class="btn block" style="display:none">YES</div>
+        <div id="no-btn" class="btn block" style="display:none">NO</div>
+        <div id="response" class="block center" style="display:none"></div>
+    </div>
 </div>
 <div class="loading" style="display:none">Loading...</div>
-<div class="popup">
+<div id="popup">
     <div id="popup-text"></div>
     <div id="close-popup" class="btn block">OK</div>
+</div>
+<div id="instruction">
+    <div id="instruction-text"></div>
+    <div id="start-btn" class="btn block">START</div>
 </div>
 <div class="overlay"></div>

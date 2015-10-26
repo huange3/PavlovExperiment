@@ -3,6 +3,7 @@ var currExp = {
     "version": "",
     "date": "",
     "id": "",
+    "mode": "",
     // PRETRAINING PARAMETERS
     "ptPassCriteria": "",
     "ptTrials": "",
@@ -68,10 +69,19 @@ var currExp = {
     "eInstructionText": ""
 };
 
-const GeneralID = 0;
-const PretrainingID = 1;
-const TrainingID = 2;
-const EvaluationID = 3;
+var trialObj = {
+    "phase": "",
+    "A": "",
+    "B": "",
+    "type": "",
+    "location": "",
+    "latency": "",
+    "userAnswer": "",
+    "isCorrect": "",
+    "test": ""
+};
+
+
 
 // DOM EVENT HANDLING //////////////////////////////////////////////
 
@@ -97,13 +107,28 @@ menuEvaluationItem.click(function () {
     showParms(EvaluationID);
 });
 
-dataLogBtn.click(function () {
-    showPopup("Hey, this is a popup!");
-})
-
 popupClose.click(function () {
     popup.toggleClass("show");
 })
+
+startExpBtn.click(runExperiment);
+
+instructionClose.click(function () {
+    instruction.toggleClass("show");
+    runTrial();
+});
+
+nextBtn.click(nextBtnClick);
+
+yesBtn.click(function () {
+    stopWatch.stop();
+    checkAccuracy(1);
+});
+
+noBtn.click(function () {
+    stopWatch.stop();
+    checkAccuracy(0)
+});
 
 // FUNCTION DEFINITIONS //////////////////////////////////////////////
 
@@ -135,6 +160,7 @@ function loadParameters() {
 
     if (currObj == null) {
         // load the default settings
+        currExp.mode = FullMode;
         currExp.ptPassCriteria = 0.90;
         currExp.ptTrials = 2;
         currExp.ptYesTrials = 2;
@@ -196,7 +222,6 @@ function loadParameters() {
         currExp.eInstructionText = $("#instructions-e").val();
     } else {
         currExp = currObj;
-        console.log(currObj);
     }
 
     mapParameters();
@@ -205,6 +230,9 @@ function loadParameters() {
 }
 
 function mapParameters() {
+    // GENERAL
+    $("input:radio[name=mode][value=" + currExp.mode + "]").prop("checked", true);
+
     // PRETRAINING 
     ptPassCriteriaLB.val(currExp.ptPassCriteria);
     ptTrialsLB.val(currExp.ptTrials);
@@ -320,6 +348,7 @@ function mapParameters() {
 
 function saveParameters() {
     currExp.id = participantIDLB.val();
+    currExp.mode = $("input:radio[name=mode]:checked").val();
 
     currExp.ptPassCriteria = ptPassCriteriaLB.val();
     currExp.ptTrials = ptTrialsLB.val();
@@ -387,9 +416,13 @@ function saveParameters() {
     currExp.eContextNoText = eContextNoLB.val();
     currExp.eInstructionText = eInstructionsLB.val();
 
-    console.log(currExp);
-
     localStorage.setObject("experiment", currExp);
+
+    spinner.show();
+    setTimeout(function () {
+        spinner.hide();
+        showPopup("Parameters saved!");
+    }, 2000);
 }
 
 Storage.prototype.setObject = function (key, value) {
@@ -405,3 +438,374 @@ function showPopup(currText) {
     popupText.text(currText);
     popup.toggleClass("show");
 }
+
+function showInstructions(currText) {
+    instructionText.html(currText.replace(/\n/g, '<br />')).text();
+    instruction.toggleClass("show");
+}
+
+function runExperiment() {
+    mainMenu.hide();
+    board.show();
+
+    loadParameters();
+
+    if (currExp.mode == PretrainingMode){
+        runPretraining();
+    } else if (currExp.mode == TrainingMode){
+        runTraining();
+    } else if (currExp.mode == EvaluationMode){
+        runEvaluation();
+    } else {
+        runPretraining();
+    }
+}
+
+function runTrial() {
+    if (currPhase == PretrainingPhase) {
+        if (stimulusList.length == 0) {
+            runPretrainingEval();
+        } else {
+            currStimulus = stimulusList.pop();
+
+            currTrial = setupTrial(currStimulus);
+
+            board.css("background", "#FFF");
+            firstLabel.text(currTrial.A);
+            firstLabel.addClass("center");
+            secondLabel.text(currTrial.B);
+            secondLabel.addClass("center");
+
+            firstLabel.show();
+
+            // down the rabbit hole we gooooooo~
+            setTimeout(firstTimerTick, firstDuration);
+        }
+    } else if (currPhase == PretrainingEvalPhase){
+        if (stimulusList.length == 0) {
+            if (currExp.mode == PretrainingMode) {
+                endExperiment();
+                return;
+            }
+
+            runTraining();
+        } else {
+            currStimulus = stimulusList.pop();
+
+            currTrial = setupTrial(currStimulus);
+
+            board.css("background", "#FFF");
+            firstLabel.text(currTrial.A);
+            firstLabel.addClass("center");
+            secondLabel.text(currTrial.B);
+            secondLabel.addClass("center");
+
+            firstLabel.show();
+
+            // down the rabbit hole we gooooooo~
+            setTimeout(firstTimerTick, firstDuration);
+        }
+    } else if (currPhase == TrainingPhase) {
+        if (stimulusList.length == 0) {
+            if (currExp.mode == TrainingMode) {
+                endExperiment();
+                return;
+            }
+
+            runEvaluation();
+        } else {
+            currStimulus = stimulusList.pop();
+
+            currTrial = setupTrial(currStimulus);
+
+            console.log(currTrial);
+
+            board.css("background", "#FFF");
+            firstLabel.text(currTrial.A);
+            setBtnLocation(firstLabel, parseInt(currTrial.location));
+
+            secondLabel.text(currTrial.B);
+            setBtnLocation(secondLabel, parseInt(currTrial.location));
+
+            firstLabel.show();
+
+            // down the rabbit hole we gooooooo~
+            setTimeout(firstTimerTick, firstDuration);
+        }
+    }
+}
+
+function setupTrial(stim) {
+    var temp = Object.create(trialObj);
+
+    temp.phase = currPhase;
+    temp.A = stim.A;
+    temp.B = stim.B;
+    temp.type = stim.type;
+    temp.location = stim.location;
+
+    return temp;
+}
+
+function firstTimerTick() {
+    firstLabel.hide();
+
+    setTimeout(withinTimerTick, withinDuration);
+}
+
+function withinTimerTick() {
+    secondLabel.show();
+
+    setTimeout(secondTimerTick, secondDuration);
+}
+
+function secondTimerTick() {
+    secondLabel.hide();
+
+    board.css("background", "#000");
+
+    if (currPhase == PretrainingPhase || currPhase == TrainingPhase) {
+        setTimeout(betweenTimerTick, betweenDuration);
+    } else {
+        setBtnLocation(yesBtn, BottomLeft);
+        setBtnLocation(noBtn, BottomRight);
+        yesBtn.show();
+        noBtn.show();
+        stopWatch.start();
+    }
+}
+
+function betweenTimerTick() {
+    if (currPhase == PretrainingPhase || currPhase == TrainingPhase) {
+        nextBtn.show();
+        stopWatch.start();
+    }
+}
+
+function nextBtnClick() {
+    if (currPhase == PretrainingPhase
+        || currPhase == TrainingPhase) stopWatch.stop(); // stopwatch already stopped in other phases
+
+    nextBtn.hide();
+
+    logTrial();
+    runTrial();
+}
+
+function logTrial() {
+    var currLatency = (stopWatch.time() / 1000).toFixed(3);
+    currTrial.latency = currLatency;
+
+    stopWatch.reset();
+
+    switch (currPhase) {
+        case PretrainingPhase:
+            pretrainingTrials.push(currTrial);
+            break;
+        case PretrainingEvalPhase:
+            pretrainingEvalTrials.push(currTrial);
+            break;
+        case TrainingPhase:
+            trainingTrials.push(currTrial);
+            break;
+        case EvaluationPhase:
+            evaluationTrials.push(currTrial);
+            break;
+    }
+}
+
+function hideBoard() {
+    firstLabel.hide();
+    secondLabel.hide();
+    nextBtn.hide();
+    yesBtn.hide();
+    noBtn.hide();
+    responseLabel.hide();
+}
+
+function runPretraining() {
+    if (setupPretraining()) {
+        showInstructions(currInstructionText);
+    }
+}
+
+function runPretrainingEval() {
+    if (setupPretrainingEval()) {
+        showInstructions(currInstructionText);
+    }
+}
+
+function runTraining() {
+    if (setupTraining()) {
+        showInstructions(currInstructionText);
+    }
+}
+
+function runEvaluation() {
+
+}
+
+function setupPretraining() {
+    currPhase = PretrainingMode;
+
+    stimulusList.length = 0; // clear the array
+
+    for (var i = 0; i < currExp.ptTrials; i++) {
+        stimulusList.push({ "A": "Red", "B": "Color", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Dog", "B": "Bone", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Cat", "B": "Mouse", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Peanut Butter", "B": "Jelly", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Peas", "B": "Carrots", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Ketchup", "B": "Mustard", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Cow", "B": "Farm", "type": 1, "location": Center });
+    }
+
+    shuffleArray(stimulusList);
+
+    firstDuration = 1000;
+    secondDuration = 1000;
+    withinDuration = 500;
+    betweenDuration = 3000;
+
+    currInstructionText = currExp.ptInstructionText;
+    board.css("background", "#FFF");
+    hideBoard();
+
+    return true;
+}
+
+function setupPretrainingEval() {
+    currPhase = PretrainingEvalPhase;
+
+    stimulusList.length = 0; // clear the array
+
+    for (var i = 0; i < currExp.ptYesTrials; i++) {
+        stimulusList.push({ "A": "Red", "B": "Color", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Dog", "B": "Bone", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Cat", "B": "Mouse", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Peanut Butter", "B": "Jelly", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Peas", "B": "Carrots", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Ketchup", "B": "Mustard", "type": 1, "location": Center });
+        stimulusList.push({ "A": "Cow", "B": "Farm", "type": 1, "location": Center });
+    }
+
+    for (var i = 0; i < currExp.ptNoTrials; i++) {
+        stimulusList.push({ "A": "Soap", "B": "Exit", "type": 0, "location": Center });
+        stimulusList.push({ "A": "Right", "B": "Cloud", "type": 0, "location": Center });
+        stimulusList.push({ "A": "Blue", "B": "Camel", "type": 0, "location": Center });
+        stimulusList.push({ "A": "Button", "B": "Tomato", "type": 0, "location": Center });
+        stimulusList.push({ "A": "Candy", "B": "Different", "type": 0, "location": Center });
+        stimulusList.push({ "A": "Eggs", "B": "Shoe", "type": 0, "location": Center });
+        stimulusList.push({ "A": "Flower", "B": "Black", "type": 0, "location": Center });
+    }
+
+    shuffleArray(stimulusList);
+
+    firstDuration = 1000;
+    secondDuration = 1000;
+    withinDuration = 500;
+    betweenDuration = 3000;
+
+    currInstructionText = currExp.ptInstructionEvalText;
+    board.css("background", "#FFF");
+    hideBoard();
+
+    return true;
+}
+
+function setupTraining() {
+    currPhase = TrainingPhase;
+
+    stimulusList.length = 0; // clear the array
+
+    for (var i = 0; i < currExp.tTrials; i++) {
+        stimulusList.push({ "A": "CUZ", "B": "PIP", "type": 1, "location": currExp.tLocation1});
+        stimulusList.push({ "A": "PIP", "B": "FIP", "type": 1, "location": currExp.tLocation2});
+        stimulusList.push({ "A": "ZAC", "B": "DUZ", "type": 1, "location": currExp.tLocation3});
+        stimulusList.push({ "A": "DUZ", "B": "VAM", "type": 1, "location": currExp.tLocation4});
+        stimulusList.push({ "A": "ZID", "B": "JOM", "type": 1, "location": currExp.tLocation5});
+        stimulusList.push({ "A": "JOM", "B": "XAD", "type": 1, "location": currExp.tLocation6});
+    }
+
+    shuffleArray(stimulusList);
+
+    firstDuration = currExp.tFirstDuration * 1000;
+    secondDuration = currExp.tSecondDuration * 1000;
+    withinDuration = currExp.tWithinDuration * 1000;
+    betweenDuration = currExp.tBetweenDuration * 1000;
+
+    currInstructionText = currExp.tInstructionText;
+    board.css("background", "#FFF");
+    hideBoard();
+
+    return true;
+}
+
+function endExperiment() {
+    // TODO send data to api
+
+    board.hide();
+    mainMenu.show();
+    showPopup("Experiment completed! Please see the test conductor for further instructions.");
+}
+
+function setBtnLocation(btn, locID) {
+    btn.removeClass();
+
+    switch (locID) {
+        case Center:
+            btn.addClass("center");
+            break;
+        case TopLeft:
+            btn.addClass("top-left");
+            break;
+        case TopRight:
+            btn.addClass("top-right");
+            break;
+        case BottomLeft:
+            btn.addClass("bottom-left");
+            break;
+        case BottomRight:
+            btn.addClass("bottom-right");
+            break;
+    }
+}
+
+function checkAccuracy(id) {
+    yesBtn.hide();
+    noBtn.hide();
+
+    currTrial.userAnswer = id;
+
+    if (id == currTrial.type) {
+        currTrial.isCorrect = true;
+        responseLabel.text("CORRECT");
+        responseLabel.css("color", "green");
+    } else {
+        currTrial.isCorrect = false;
+        responseLabel.text("INCORRECT");
+        responseLabel.css("color", "red");
+    }
+
+    responseLabel.show();
+
+    setTimeout(function () {
+        responseLabel.hide();
+        nextBtn.show();
+    }, 2000);
+}
+
+/**
+ * Randomize array element order in-place.
+ * Using Durstenfeld shuffle algorithm.
+ */
+function shuffleArray(array) {
+    for (var i = array.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+    return array;
+}
+

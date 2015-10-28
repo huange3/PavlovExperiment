@@ -37,10 +37,10 @@ var currExp = {
     "eBetweenDuration": "",
     "eYesTrials": "",
     "eNoTrials": "",
-    "showFeedback":"",
+    "showFeedback": "",
+    "retrainLimit": "",
     "symmEnabled": "",
     "symmPassCriteria": "",
-    "symmRetrainLimit": "",
     "symmLocation1": "",
     "symmLocation2": "",
     "symmLocation3": "",
@@ -49,13 +49,11 @@ var currExp = {
     "symmLocation6": "",
     "transEnabled": "",
     "transPassCriteria": "",
-    "transRetrainLimit": "",
     "transLocation1": "",
     "transLocation2": "",
     "transLocation3": "",
     "equivEnabled": "",
     "equivPassCriteria": "",
-    "equivRetrainLimit": "",
     "equivLocation1": "",
     "equivLocation2": "",
     "equivLocation3": "",
@@ -66,7 +64,11 @@ var currExp = {
     "eContextText": "",
     "eContextYesText": "",
     "eContextNoText": "",
-    "eInstructionText": ""
+    "eInstructionText": "",
+    "ptTrialList": "",
+    "pteTrialList": "",
+    "tTrialList": "",
+    "eTrialList": ""
 };
 
 var trialObj = {
@@ -115,19 +117,24 @@ startExpBtn.click(runExperiment);
 
 instructionClose.click(function () {
     instruction.toggleClass("show");
-    runTrial();
+
+    if (currPhase == EvaluationPhase) {
+        runEvaluationTrial();
+    } else {
+        runTrial();
+    }
 });
 
 nextBtn.click(nextBtnClick);
 
 yesBtn.click(function () {
     stopWatch.stop();
-    checkAccuracy(1);
+    checkFeedback(1);
 });
 
 noBtn.click(function () {
     stopWatch.stop();
-    checkAccuracy(0)
+    checkFeedback(0)
 });
 
 // FUNCTION DEFINITIONS //////////////////////////////////////////////
@@ -191,9 +198,9 @@ function loadParameters() {
         currExp.eYesTrials = 1;
         currExp.eNoTrials = 1;
         currExp.showFeedback = false;
+        currExp.retrainLimit = 3;
         currExp.symmEnabled = true;
         currExp.symmPassCriteria = 0.90;
-        currExp.symmRetrainLimit = 3;
         currExp.symmLocation1 = 1;
         currExp.symmLocation2 = 1;
         currExp.symmLocation3 = 1;
@@ -203,14 +210,12 @@ function loadParameters() {
 
         currExp.transEnabled = true;
         currExp.transPassCriteria = 0.90;
-        currExp.transRetrainLimit = 3;
         currExp.transLocation1 = 1;
         currExp.transLocation2 = 1;
         currExp.transLocation3 = 1;
 
         currExp.equivEnabled = true;
         currExp.equivPassCriteria = 0.90;
-        currExp.equivRetrainLimit = 3;
         currExp.equivLocation1 = 1;
         currExp.equivLocation2 = 1;
         currExp.equivLocation3 = 1;
@@ -296,6 +301,7 @@ function mapParameters() {
     eContextYesLB.val(currExp.eContextYesText);
     eContextNoLB.val(currExp.eContextNoText);
     eInstructionsLB.val(currExp.eInstructionText);
+    retrainLB.val(currExp.retrainLimit);
 
     if (currExp.showFeedback) {
         eFeedbackLB.prop("checked", true);
@@ -310,7 +316,6 @@ function mapParameters() {
     }
 
     symmPassLB.val(currExp.symmPassCriteria);
-    symmRetrainLB.val(currExp.symmRetrainLimit);
 
     $('#symmetry-1 option[value="' + currExp.symmLocation1 + '"]').prop("selected", true);
     $('#symmetry-2 option[value="' + currExp.symmLocation2 + '"]').prop("selected", true);
@@ -326,7 +331,6 @@ function mapParameters() {
     }
 
     transPassLB.val(currExp.transPassCriteria);
-    transRetrainLB.val(currExp.transRetrainLimit);
 
     $('#transitivity-1 option[value="' + currExp.transLocation1 + '"]').prop("selected", true);
     $('#transitivity-2 option[value="' + currExp.transLocation2 + '"]').prop("selected", true);
@@ -339,7 +343,6 @@ function mapParameters() {
     }
 
     equivPassLB.val(currExp.equivPassCriteria);
-    equivRetrainLB.val(currExp.equivRetrainLimit);
 
     $('#equivalence-1 option[value="' + currExp.equivLocation1 + '"]').prop("selected", true);
     $('#equivalence-2 option[value="' + currExp.equivLocation2 + '"]').prop("selected", true);
@@ -347,6 +350,7 @@ function mapParameters() {
 }
 
 function saveParameters() {
+    currExp.version = "1.0.0";
     currExp.id = participantIDLB.val();
     currExp.mode = $("input:radio[name=mode]:checked").val();
 
@@ -383,9 +387,9 @@ function saveParameters() {
     currExp.eYesTrials = eYesTrialsLB.val();
     currExp.eNoTrials = eNoTrialsLB.val();
     currExp.showFeedback = eFeedbackLB.is(":checked");
+
     currExp.symmEnabled = symmetryLB.is(":checked");
     currExp.symmPassCriteria = symmPassLB.val();
-    currExp.symmRetrainLimit = symmRetrainLB.val();
     currExp.symmLocation1 = symmLocation1LB.val();
     currExp.symmLocation2 = symmLocation2LB.val();
     currExp.symmLocation3 = symmLocation3LB.val();
@@ -395,26 +399,27 @@ function saveParameters() {
 
     currExp.transEnabled = transitivityLB.is(":checked");
     currExp.transPassCriteria = transPassLB.val();
-    currExp.transRetrainLimit = transRetrainLB.val();
     currExp.transLocation1 = transLocation1LB.val();
     currExp.transLocation2 = transLocation2LB.val();
     currExp.transLocation3 = transLocation3LB.val();
 
     currExp.equivEnabled = equivalenceLB.is(":checked");
     currExp.equivPassCriteria = equivPassLB.val();
-    currExp.equivRetrainLimit = equivRetrainLB.val();
     currExp.equivLocation1 = equivLocation1LB.val();
     currExp.equivLocation2 = equivLocation2LB.val();
     currExp.equivLocation3 = equivLocation3LB.val();
 
     currExp.eTrialOrder = eTrialOrderLB.val();
     currExp.yesLocation = yesLocationLB.val();
-    currExp.noLocation = yesLocationLB.val();
+    currExp.noLocation = noLocationLB.val();
     currExp.eContextEnabled = eContextLB.is(":checked");
     currExp.eContextText = eContextTextLB.val();
     currExp.eContextYesText = eContextYesLB.val();
     currExp.eContextNoText = eContextNoLB.val();
     currExp.eInstructionText = eInstructionsLB.val();
+    currExp.retrainLimit = retrainLB.val();
+
+    console.log(currExp);
 
     localStorage.setObject("experiment", currExp);
 
@@ -435,7 +440,7 @@ Storage.prototype.getObject = function (key) {
 }
 
 function showPopup(currText) {
-    popupText.text(currText);
+    popupText.html(currText).text();
     popup.toggleClass("show");
 }
 
@@ -483,12 +488,18 @@ function runTrial() {
         }
     } else if (currPhase == PretrainingEvalPhase){
         if (stimulusList.length == 0) {
-            if (currExp.mode == PretrainingMode) {
-                endExperiment();
-                return;
-            }
+            // can't progress until we hit the necessary pass criteria
+            if (checkAccuracy()){
+                if (currExp.mode == PretrainingMode) {
+                    endExperiment();
+                    return;
+                }
 
-            runTraining();
+                runTraining();
+            } else {
+                setupPretrainingEval();
+                runTrial();
+            }
         } else {
             currStimulus = stimulusList.pop();
 
@@ -518,13 +529,19 @@ function runTrial() {
 
             currTrial = setupTrial(currStimulus);
 
-            console.log(currTrial);
+            //console.log(currTrial);
 
             board.css("background", "#FFF");
             firstLabel.text(currTrial.A);
             setBtnLocation(firstLabel, parseInt(currTrial.location));
 
-            secondLabel.text(currTrial.B);
+            // check if we have simulataneous presentations enabled
+            if (currExp.tSimultaneous) {
+                secondLabel.html(currTrial.A + "&nbsp;&nbsp;&nbsp;" + currTrial.B).text();
+            } else {
+                secondLabel.text(currTrial.B);
+            }
+            
             setBtnLocation(secondLabel, parseInt(currTrial.location));
 
             firstLabel.show();
@@ -532,6 +549,97 @@ function runTrial() {
             // down the rabbit hole we gooooooo~
             setTimeout(firstTimerTick, firstDuration);
         }
+    }
+}
+
+function runEvaluationTrial() {
+    // Remember to check the accuracy before progressing to different tests
+    // or ending the experiment.
+
+    // Scenario 1: We're done!
+    if (testList.length == 0 && stimulusList.length == 0) {
+        if (!checkAccuracy()) {
+            retrainCount++;
+
+            if (retrainCount > currExp.retrainLimit) {
+                endExperiment("You have exceeded the maximum number of retraining attempts! Ending experiment.");
+            } else {                
+                runRetraining();
+            }          
+        } else {
+            endExperiment();
+        }     
+        return;
+    }
+
+    // Scenario 2: We still have more tests to do!
+    if (stimulusList.length == 0) {
+        if (!checkAccuracy()) {
+            retrainCount++;
+
+            if (retrainCount > currExp.retrainLimit) {
+                endExperiment("You have exceeded the maximum number of retraining attempts! Ending experiment.");
+            } else {              
+                runRetraining();
+            }
+            return;
+        }
+
+        currTest = testList.shift();
+
+        if (currTest == SymmetryID) {
+            currPassCriteria = currExp.symmPassCriteria;
+            stimulusList = symmStimulusList;
+        } else if (currTest == TransitivityID) {
+            currPassCriteria = currExp.transPassCriteria;
+            stimulusList = transStimulusList;
+        } else if (currTest == EquivalenceID) {
+            currPassCriteria = currExp.equivPassCriteria;
+            stimulusList = equivStimulusList;
+        }
+
+        correctCount = 0;
+        phaseTrialCount = stimulusList.length;
+
+        console.log(stimulusList);
+
+        currStimulus = stimulusList.pop();
+
+        currTrial = setupTrial(currStimulus);
+
+        //console.log(currTrial);
+
+        board.css("background", "#FFF");
+        firstLabel.text(currTrial.A);
+        setBtnLocation(firstLabel, parseInt(currTrial.location));
+
+        secondLabel.text(currTrial.B);
+        setBtnLocation(secondLabel, parseInt(currTrial.location));
+
+        firstLabel.show();
+
+        // down the rabbit hole we gooooooo~
+        setTimeout(firstTimerTick, firstDuration);
+    }
+    // Scenario 3: Still have more trials in this test!
+    else {
+        currStimulus = stimulusList.pop();
+
+        currTrial = setupTrial(currStimulus);
+
+        //console.log(currTrial);
+
+        board.css("background", "#FFF");
+        firstLabel.text(currTrial.A);
+        setBtnLocation(firstLabel, parseInt(currTrial.location));
+
+        secondLabel.text(currTrial.B);
+        setBtnLocation(secondLabel, parseInt(currTrial.location));
+
+        firstLabel.show();
+
+        // down the rabbit hole we gooooooo~
+        setTimeout(firstTimerTick, firstDuration);
     }
 }
 
@@ -543,6 +651,10 @@ function setupTrial(stim) {
     temp.B = stim.B;
     temp.type = stim.type;
     temp.location = stim.location;
+
+    if (currPhase == EvaluationPhase) {
+        temp.test = currTest;
+    }
 
     return temp;
 }
@@ -566,9 +678,23 @@ function secondTimerTick() {
 
     if (currPhase == PretrainingPhase || currPhase == TrainingPhase) {
         setTimeout(betweenTimerTick, betweenDuration);
+    } else if (currPhase == EvaluationPhase) {
+        // in the evaluation phase, we have the option of random placement of the
+        // YES/NO buttons so decide where they go.
+        if (currExp.yesLocation == RandomLocation || currExp.noLocation == RandomLocation) {
+            setBtnRandomLocation();
+        } else {
+            setBtnLocation(yesBtn, BottomLeft);
+            setBtnLocation(noBtn, BottomRight);
+        }
+
+        yesBtn.show();
+        noBtn.show();
+        stopWatch.start();
     } else {
         setBtnLocation(yesBtn, BottomLeft);
         setBtnLocation(noBtn, BottomRight);
+
         yesBtn.show();
         noBtn.show();
         stopWatch.start();
@@ -589,7 +715,12 @@ function nextBtnClick() {
     nextBtn.hide();
 
     logTrial();
-    runTrial();
+
+    if (currPhase == EvaluationPhase) {
+        runEvaluationTrial();
+    } else {
+        runTrial();
+    }    
 }
 
 function logTrial() {
@@ -597,6 +728,8 @@ function logTrial() {
     currTrial.latency = currLatency;
 
     stopWatch.reset();
+
+    console.log(currTrial);
 
     switch (currPhase) {
         case PretrainingPhase:
@@ -641,8 +774,16 @@ function runTraining() {
     }
 }
 
-function runEvaluation() {
+function runRetraining() {
+    if (setupRetraining()) {
+        showInstructions(currInstructionText);
+    }
+}
 
+function runEvaluation() {
+    if (setupEvaluation()) {
+        showInstructions(currInstructionText);
+    }
 }
 
 function setupPretraining() {
@@ -701,6 +842,10 @@ function setupPretrainingEval() {
 
     shuffleArray(stimulusList);
 
+    currPassCriteria = currExp.ptPassCriteria;
+    phaseTrialCount = stimulusList.length;
+    correctCount = 0;
+
     firstDuration = 1000;
     secondDuration = 1000;
     withinDuration = 500;
@@ -741,12 +886,166 @@ function setupTraining() {
     return true;
 }
 
-function endExperiment() {
-    // TODO send data to api
+function setupRetraining() {
+    currPhase = TrainingPhase;
+
+    stimulusList.length = 0; // clear the array
+
+    for (var i = 0; i < currExp.tTrials; i++) {
+        stimulusList.push({ "A": "CUZ", "B": "PIP", "type": 1, "location": currExp.tLocation1 });
+        stimulusList.push({ "A": "PIP", "B": "FIP", "type": 1, "location": currExp.tLocation2 });
+        stimulusList.push({ "A": "ZAC", "B": "DUZ", "type": 1, "location": currExp.tLocation3 });
+        stimulusList.push({ "A": "DUZ", "B": "VAM", "type": 1, "location": currExp.tLocation4 });
+        stimulusList.push({ "A": "ZID", "B": "JOM", "type": 1, "location": currExp.tLocation5 });
+        stimulusList.push({ "A": "JOM", "B": "XAD", "type": 1, "location": currExp.tLocation6 });
+    }
+
+    shuffleArray(stimulusList);
+
+    firstDuration = currExp.tFirstDuration * 1000;
+    secondDuration = currExp.tSecondDuration * 1000;
+    withinDuration = currExp.tWithinDuration * 1000;
+    betweenDuration = currExp.tBetweenDuration * 1000;
+
+    currInstructionText = currExp.rtInstructionText;
+    board.css("background", "#FFF");
+    hideBoard();
+
+    return true;
+}
+
+function setupEvaluation() {
+    currPhase = EvaluationPhase;
+
+    testList.length = 0;
+
+    // decide which tests we're going to do
+    if (currExp.symmEnabled) {
+        testList.push(SymmetryID);
+
+        // YES trials
+        for (var i = 0; i < currExp.eYesTrials; i++) {
+            symmStimulusList.push({ "A": "PIP", "B": "CUZ", "type": 1, "location": currExp.symmLocation1 });
+            symmStimulusList.push({ "A": "FIP", "B": "PIP", "type": 1, "location": currExp.symmLocation2 });
+            symmStimulusList.push({ "A": "DUZ", "B": "ZAC", "type": 1, "location": currExp.symmLocation3 });
+            symmStimulusList.push({ "A": "VAM", "B": "DUZ", "type": 1, "location": currExp.symmLocation4 });
+            symmStimulusList.push({ "A": "JOM", "B": "ZID", "type": 1, "location": currExp.symmLocation5 });
+            symmStimulusList.push({ "A": "XAD", "B": "JOM", "type": 1, "location": currExp.symmLocation6 });
+        }
+
+        // NO trials
+        for (var i = 0; i < currExp.eNoTrials; i++) {
+            symmStimulusList.push({ "A": "CUZ", "B": "ZAC", "type": 0, "location": currExp.symmLocation1 });
+            symmStimulusList.push({ "A": "PIP", "B": "DUZ", "type": 0, "location": currExp.symmLocation2 });
+            symmStimulusList.push({ "A": "FIP", "B": "VAM", "type": 0, "location": currExp.symmLocation3 });
+            symmStimulusList.push({ "A": "ZAC", "B": "ZID", "type": 0, "location": currExp.symmLocation4 });
+            symmStimulusList.push({ "A": "DUZ", "B": "JOM", "type": 0, "location": currExp.symmLocation5 });
+            symmStimulusList.push({ "A": "VAM", "B": "XAD", "type": 0, "location": currExp.symmLocation6 });
+        }
+
+        shuffleArray(symmStimulusList);
+    }
+
+    if (currExp.transEnabled) {
+        testList.push(TransitivityID);
+
+        // YES trials
+        for (var i = 0; i < currExp.eYesTrials; i++) {
+            transStimulusList.push({ "A": "CUZ", "B": "FIP", "type": 1, "location": currExp.transLocation1 });
+            transStimulusList.push({ "A": "ZAC", "B": "VAM", "type": 1, "location": currExp.transLocation2 });
+            transStimulusList.push({ "A": "ZID", "B": "XAD", "type": 1, "location": currExp.transLocation3 });
+        }
+
+        // NO trials
+        for (var i = 0; i < currExp.eNoTrials; i++) {
+            transStimulusList.push({ "A": "FIP", "B": "ZAC", "type": 0, "location": currExp.transLocation1 });
+            transStimulusList.push({ "A": "CUZ", "B": "VAM", "type": 0, "location": currExp.transLocation2 });
+            transStimulusList.push({ "A": "ZAC", "B": "XAD", "type": 0, "location": currExp.transLocation3 });
+        }
+
+        shuffleArray(transStimulusList);
+    }
+
+    if (currExp.equivEnabled) {
+        testList.push(EquivalenceID);
+
+        // YES trials
+        for (var i = 0; i < currExp.eYesTrials; i++) {
+            equivStimulusList.push({ "A": "FIP", "B": "CUZ", "type": 1, "location": currExp.equivLocation1 });
+            equivStimulusList.push({ "A": "VAM", "B": "ZAC", "type": 1, "location": currExp.equivLocation2 });
+            equivStimulusList.push({ "A": "XAD", "B": "ZID", "type": 1, "location": currExp.equivLocation3 });
+        }
+
+        // NO trials
+        for (var i = 0; i < currExp.eNoTrials; i++) {
+            equivStimulusList.push({ "A": "CUZ", "B": "DUZ", "type": 0, "location": currExp.equivLocation1 });
+            equivStimulusList.push({ "A": "ZAC", "B": "JOM", "type": 0, "location": currExp.equivLocation2 });
+            equivStimulusList.push({ "A": "ZID", "B": "PIP", "type": 0, "location": currExp.equivLocation3 });
+        }
+
+        shuffleArray(equivStimulusList);
+    }
+
+    if (currExp.eTrialOrder == Mixed) shuffleArray(testList);
+
+    // get our current queue and test
+    currTest = testList.shift();
+
+    if (currTest == SymmetryID) {
+        currPassCriteria = currExp.symmPassCriteria;
+        stimulusList = symmStimulusList;
+    } else if (currTest == TransitivityID) {
+        currPassCriteria = currExp.transPassCriteria;
+        stimulusList = transStimulusList;
+    } else if (currTest == EquivalenceID) {
+        currPassCriteria = currExp.equivPassCriteria;
+        stimulusList = equivStimulusList;
+    }
+
+    phaseTrialCount = stimulusList.length;
+    correctCount = 0;
+
+    console.log(stimulusList);
+
+    firstDuration = currExp.eFirstDuration * 1000;
+    secondDuration = currExp.eSecondDuration * 1000;
+    withinDuration = currExp.eWithinDuration * 1000;
+    betweenDuration = currExp.eBetweenDuration * 1000;
+
+    currInstructionText = currExp.eInstructionText;
+    board.css("background", "#FFF");
+    hideBoard();
+
+    return true;
+}
+
+function endExperiment(addText) {
+    var currJSON = "";
 
     board.hide();
-    mainMenu.show();
-    showPopup("Experiment completed! Please see the test conductor for further instructions.");
+    spinner.show();
+
+    // build the final object to send over
+    currExp.ptTrialList = pretrainingTrials.slice();
+    currExp.pteTrialList = pretrainingEvalTrials.slice();
+    currExp.tTrialList = trainingTrials.slice();
+    currExp.eTrialList = evaluationTrials.slice();
+
+    currJSON = JSON.stringify(currExp);
+
+    console.log(currJSON);
+
+    // send data to api
+    $.post("../Data/Save", currJSON, function (data) {
+        spinner.hide();
+        mainMenu.show();
+
+        if (addText != null && addText != "") {
+            showPopup(addText + "<br/><br/>Experiment completed! Thank you for participating! Please see the test conductor for further instructions.");
+        } else {
+            showPopup("Experiment completed! Thank you for participating! Please see the test conductor for further instructions.");
+        }
+    }); 
 }
 
 function setBtnLocation(btn, locID) {
@@ -771,7 +1070,20 @@ function setBtnLocation(btn, locID) {
     }
 }
 
-function checkAccuracy(id) {
+function setBtnRandomLocation() {
+    yesBtn.removeClass();
+    noBtn.removeClass();
+
+    if (Math.floor(Math.random() * 20) % 2 == 0) {
+        yesBtn.addClass("bottom-left");
+        noBtn.addClass("bottom-right");
+    } else {
+        yesBtn.addClass("bottom-right");
+        noBtn.addClass("bottom-left");
+    }
+}
+
+function checkFeedback(id) {
     yesBtn.hide();
     noBtn.hide();
 
@@ -779,6 +1091,8 @@ function checkAccuracy(id) {
 
     if (id == currTrial.type) {
         currTrial.isCorrect = true;
+        correctCount++;
+
         responseLabel.text("CORRECT");
         responseLabel.css("color", "green");
     } else {
@@ -787,12 +1101,29 @@ function checkAccuracy(id) {
         responseLabel.css("color", "red");
     }
 
-    responseLabel.show();
+    if (currExp.showFeedback) {
+        responseLabel.show();
 
-    setTimeout(function () {
-        responseLabel.hide();
+        setTimeout(function () {
+            responseLabel.hide();
+            nextBtn.show();
+        }, 2000);
+    } else {
+        // proceed to the next btn
         nextBtn.show();
-    }, 2000);
+    }   
+}
+
+function checkAccuracy(){
+    var correctNeeded = 0;
+
+    correctNeeded = Math.round(currPassCriteria * phaseTrialCount);
+
+    console.log("Correct needed: " + correctNeeded + ", Correct count: " + correctCount);
+
+    if (correctCount >= correctNeeded) return true;
+
+    return false;
 }
 
 /**

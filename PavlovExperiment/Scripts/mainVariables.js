@@ -77,10 +77,10 @@ var eContextTextLB = $("#cue-text-e");
 var eContextYesLB = $("#cue-yes-e");
 var eContextNoLB = $("#cue-no-e");
 var eInstructionsLB = $("#instructions-e");
+var retrainLB = $("#retrain-limit");
 
 var symmetryLB = $("#symmetry");
 var symmPassLB = $("#symmetry-pass");
-var symmRetrainLB = $("#symmetry-retrain");
 var symmLocation1LB = $("#symmetry-1");
 var symmLocation2LB = $("#symmetry-2");
 var symmLocation3LB = $("#symmetry-3");
@@ -90,14 +90,12 @@ var symmLocation6LB = $("#symmetry-6");
 
 var transitivityLB = $("#transitivity");
 var transPassLB = $("#transitivity-pass");
-var transRetrainLB = $("#transitivity-retrain");
 var transLocation1LB = $("#transitivity-1");
 var transLocation2LB = $("#transitivity-2");
 var transLocation3LB = $("#transitivity-3");
 
 var equivalenceLB = $("#equivalence");
 var equivPassLB = $("#equivalence-pass");
-var equivRetrainLB = $("#equivalence-retrain");
 var equivLocation1LB = $("#equivalence-1");
 var equivLocation2LB = $("#equivalence-2");
 var equivLocation3LB = $("#equivalence-3");
@@ -120,12 +118,22 @@ const PretrainingEvalPhase = 2;
 const TrainingPhase = 3;
 const EvaluationPhase = 4;
 
+// TEST IDs
+const SymmetryID = 1;
+const TransitivityID = 2;
+const EquivalenceID = 3;
+
+// TEST ORDER IDs
+const Sequential = 1;
+const Mixed = 2;
+
 // LOCATION IDs
 const Center = 1;
 const TopLeft = 2;
 const TopRight = 3;
 const BottomLeft = 4;
 const BottomRight = 5;
+const RandomLocation = 6;
 
 // TIMER INTERVALS
 var firstDuration = 0;
@@ -138,7 +146,10 @@ var latency = 0;
 var currPhase = 0;
 var currTrial;
 var currStimulus;
+var currTest;
+var currPassCriteria;
 var stimulusList = [];
+var testList = [];
 var currInstructionText = "";
 var stopWatch = new clsStopwatch();
 var pretrainingTrials = [];
@@ -146,3 +157,16 @@ var pretrainingEvalTrials = [];
 var trainingTrials = [];
 var evaluationTrials = [];
 var retrainingTrials = [];
+var symmStimulusList = [];
+var transStimulusList = [];
+var equivStimulusList = [];
+var correctCount = 0;
+var phaseTrialCount = 0;
+var retrainCount = 0;
+
+// STIMULUS POOL
+//var stimPool = [
+//    ["CUZ", "PIP", "FIP"],
+//    ["ZAC", "DUZ", "VAM"],
+//    ["ZID", "JOM", "XAD"]
+//];

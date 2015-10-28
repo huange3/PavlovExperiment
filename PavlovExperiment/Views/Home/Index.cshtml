@@ -18,7 +18,7 @@
         </select>
 }
 
-<div class="wrapper">
+<div class="wrapper wrapper-bg">
     @*  Main menu *@
     <div id="main-menu">
         <div id="parameters" class="btn block">Parameters</div>
@@ -33,354 +33,337 @@
             <input type="radio" id="pretraining-item" name="menu" /><label for="pretraining-item" class="item block">Pretraining</label>
             <input type="radio" id="training-item" name="menu" /><label for="training-item" class="item block">Training</label>
             <input type="radio" id="evaluation-item" name="menu" /><label for="evaluation-item" class="item block">Evaluation</label>
-            <div class="bottom">
+            <div class="bottom small">
                 <div id="parm-save" class="btn block">Save</div>
                 <div id="parm-cancel" class="btn block">Cancel</div>
             </div>
         </div>
-        <div id="general-parm" style="display:none" class="options">
-            <table>
-                <tr>
-                    <td>Version</td>
-                    <td><input type="text" id="version" value="1.0.0" readonly/></td>
-                </tr>
-                <tr>
-                    <td>Date</td>
-                    <td><input type="text" id="date" value="@currDate" readonly/></td>
-                </tr>
-                <tr>
-                    <td>Participant ID</td>
-                    <td><input type="text" id="participant-id" /></td>
-                </tr>
-                <tr>
-                    <td>
-                        Experiment Mode
-                    </td>
-                    <td>
-                        <input type="radio" name="mode" id="mode-1" value="1"/><label for="mode-1" class="item">Pretraining</label><br />
-                        <input type="radio" name="mode" id="mode-2" value="2"/><label for="mode-2" class="item">Training</label><br />
-                        <input type="radio" name="mode" id="mode-3" value="3"/><label for="mode-3" class="item">Evaluation</label><br />
-                        <input type="radio" name="mode" id="mode-4" value="4"/><label for="mode-4" class="item">Full</label>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <div id="pretraining-parm" style="display:none" class="options">
-            <table>
-                <tr>
-                    <td>Pass Criteria</td>
-                    <td><input type="number" id="pass-criteria-pt" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Stimulus Pair Presentations</td>
-                    <td><input type="number" id="trials-pt" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>YES Pair Presentations</td>
-                    <td><input type="number" id="yes-trials-pt" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>NO Pair Presentations</td>
-                    <td><input type="number" id="no-trials-pt" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Contextual Cues?</td>
-                    <td>
-                        <input type="checkbox" id="cues-pt" />
-                        <div id="context-options-pt">
-                            <table>
-                                <tr>
-                                    <td>Contextual Cue Text</td>
-                                    <td><textarea id="cue-text-pt"></textarea></td>
-                                </tr>
-                                <tr>
-                                    <td>YES Button Text</td>
-                                    <td><textarea id="cue-yes-pt"></textarea></td>
-                                </tr>
-                                <tr>
-                                    <td>NO Button Text</td>
-                                    <td><textarea id="cue-no-pt"></textarea></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-             
-                <tr>
-                    <td>Instructions Pretraining</td>
-                    <td><textarea id="instructions-pt" cols="50" rows="5">Thank you for volunteering to participate in this experiment. A purpose of this experiment is to see how well people can detect when things "go-together". The experiment has several stages. The first stage is to help familiarize you with the procedure. In this first stage you will be presented with common words. It will be important to watch the screen closely during this first stage. At some points during this stage you will be asked if the two most recent words go together. To indicate if two words go together you will use the computers mouse to click the "YES" button – if the previous two words do not go together then click the "NO" button.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
-                </tr>
-                <tr>
-                    <td>Instructions Pretraining Evaluation</td>
-                    <td><textarea id="instructions-pte" cols="50" rows="5">Now it is time to see how well you remember the stimuli that go together. In this next stage of the experiment you will see pairs of words followed by a chance to indicate whether or not those two words "go-together". If you had just seen a pair of words that go together indicate this by selecting the "YES" button. Use the "NO" button for those pairs that you see that are not meant to go together.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
-                </tr>
-            </table>
-        </div>
-        <div id="training-parm" style="display:none" class="options">
-            <table>
-                <tr>
-                    <td>First Stimulus Duration</td>
-                    <td><input type="number" id="first-duration-t" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Second Stimulus Duration</td>
-                    <td><input type="number" id="second-duration-t" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Within Pair Delay</td>
-                    <td><input type="number" id="within-t" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Between Pair Delay</td>
-                    <td><input type="number" id="between-t" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Stimulus Pair Presentations</td>
-                    <td><input type="number" id="trials-t" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Simultaneous Presentation?</td>
-                    <td><input type="checkbox" id="simultaneous-t"/></td>
-                </tr>
-                <tr>
-                    <td>Instructions</td>
-                    <td><textarea id="instructions-t" cols="50" rows="5">You are now ready for the next stage of the study. This stage is similar to the previous with one small change – the words you will see now are not real words. Your task will be to first to watch to see which nonsense words go together. Following that you will be asked to determine if pairs of words you see "go-together" or not. You may or may not be told if you are making the correct selection, however the program is recording your performance and the better you do the sooner the study will be over.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
-                </tr>
-                <tr>
-                    <td>Instructions for Retraining</td>
-                    <td><textarea id="instructions-rt" cols="50" rows="5"></textarea></td>
-                </tr>
-            <tr>
-                <td>Locations</td>
-                <td>
-                    <table>
-                        <tr>
-                            <td>Pair 1</td>
-                            <td>@writeLocations("training-1")</td>
-                        </tr>
-                        <tr>
-                            <td>Pair 2</td>
-                            <td>@writeLocations("training-2")</td>
-                        </tr>
-                        <tr>
-                            <td>Pair 3</td>
-                            <td>@writeLocations("training-3")</td>
-                        </tr>
-                        <tr>
-                            <td>Pair 4</td>
-                            <td>@writeLocations("training-4")</td>
-                        </tr>
-                        <tr>
-                            <td>Pair 5</td>
-                            <td>@writeLocations("training-5")</td>
-                        </tr>
-                        <tr>
-                            <td>Pair 6</td>
-                            <td>@writeLocations("training-6")</td>
-                        </tr>
-                    </table>
-                </td>
-            </tr> 
-            </table>         
-        </div>
-        <div id="evaluation-parm" style="display:none" class="options">
-            <table>
-                <tr>
-                    <td>First Stimulus Duration</td>
-                    <td><input type="number" id="first-duration-e" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Second Stimulus Duration</td>
-                    <td><input type="number" id="second-duration-e" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Within Pair Delay</td>
-                    <td><input type="number" id="within-e" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Between Pair Delay</td>
-                    <td><input type="number" id="between-e" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>YES Pair Presentations</td>
-                    <td><input type="number" id="yes-trials-e" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>NO Pair Presentations</td>
-                    <td><input type="number" id="no-trials-e" min="0" max="100" /></td>
-                </tr>
-                <tr>
-                    <td>Show Feedback?</td>
-                    <td><input type="checkbox" id="feedback" /></td>
-                </tr>
-                <tr>
-                    <td>Symmetry Test?</td>
-                    <td>
-                        <input type="checkbox" id="symmetry" />
-                        <div id="symmetry-options">
-                            <table>
-                                <tr>
-                                    <td>Pass Criteria</td>
-                                    <td><input type="number" id="symmetry-pass" min="0" max="100" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Retraining Attempts</td>
-                                    <td><input type="number" id="symmetry-retrain" min="0" max="100" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Locations</td>
-                                    <td>
-                                        <table>
-                                            <tr>
-                                                <td>Pair 1</td>
-                                                <td>@writeLocations("symmetry-1")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 2</td>
-                                                <td>@writeLocations("symmetry-2")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 3</td>
-                                                <td>@writeLocations("symmetry-3")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 4</td>
-                                                <td>@writeLocations("symmetry-4")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 5</td>
-                                                <td>@writeLocations("symmetry-5")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 6</td>
-                                                <td>@writeLocations("symmetry-6")</td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Transitivity Test?</td>
-                    <td>
-                        <input type="checkbox" id="transitivity" />
-                        <div id="transitivity-options">
-                            <table>
-                                <tr>
-                                    <td>Pass Criteria</td>
-                                    <td><input type="number" id="transitivity-pass" min="0" max="100" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Retraining Attempts</td>
-                                    <td><input type="number" id="transitivity-retrain" min="0" max="100" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Locations</td>
-                                    <td>
-                                        <table>
-                                            <tr>
-                                                <td>Pair 1</td>
-                                                <td>@writeLocations("transitivity-1")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 2</td>
-                                                <td>@writeLocations("transitivity-2")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 3</td>
-                                                <td>@writeLocations("transitivity-3")</td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Equivalence Test?</td>
-                    <td>
-                        <input type="checkbox" id="equivalence" />
-                        <div id="equivalence-options">
-                            <table>
-                                <tr>
-                                    <td>Pass Criteria</td>
-                                    <td><input type="number" id="equivalence-pass" min="0" max="100" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Retraining Attempts</td>
-                                    <td><input type="number" id="equivalence-retrain" min="0" max="100" /></td>
-                                </tr>
-                                <tr>
-                                    <td>Locations</td>
-                                    <td>
-                                        <table>
-                                            <tr>
-                                                <td>Pair 1</td>
-                                                <td>@writeLocations("equivalence-1")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 2</td>
-                                                <td>@writeLocations("equivalence-2")</td>
-                                            </tr>
-                                            <tr>
-                                                <td>Pair 3</td>
-                                                <td>@writeLocations("equivalence-3")</td>
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Evaluation Test Order</td>
-                    <td>
-                        <select id="trial-order">
-                            <option value="1">Sequential</option>
-                            <option value="2">Mixed</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td>YES Button Location</td>
-                    <td>@writeLocations("yes-loc")</td>
-                </tr>
-                <tr>
-                    <td>NO Button Location</td>
-                    <td>@writeLocations("no-loc")</td>
-                </tr>
-                <tr>
-                    <td>Contextual Cues?</td>
-                    <td>
-                        <input type="checkbox" id="cues-e" />
-                        <div id="context-options-e">
-                            <table>
-                                <tr>
-                                    <td>Contextual Cue Text</td>
-                                    <td><textarea id="cue-text-e"></textarea></td>
-                                </tr>
-                                <tr>
-                                    <td>YES Button Text</td>
-                                    <td><textarea id="cue-yes-e"></textarea></td>
-                                </tr>
-                                <tr>
-                                    <td>NO Button Text</td>
-                                    <td><textarea id="cue-no-e"></textarea></td>
-                                </tr>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Instructions</td>
-                    <td><textarea id="instructions-e" cols="50" rows="5">Now you will be asked to determine if pairs of words you see "go-together" or not. You may or may not be told if you are making the correct selection, however the program is recording your performance and the better you do the sooner the study will be over.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
-                </tr>
-            </table>
+        <div class="menu-body">
+            <div id="general-parm" style="display:none" class="options">
+                <table>
+                    <tr>
+                        <td>Version</td>
+                        <td><input type="text" id="version" value="1.0.0" readonly /></td>
+                    </tr>
+                    <tr>
+                        <td>Date</td>
+                        <td><input type="text" id="date" value="@currDate" readonly /></td>
+                    </tr>
+                    <tr>
+                        <td>Participant ID</td>
+                        <td><input type="text" id="participant-id" /></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Experiment Mode
+                        </td>
+                        <td>
+                            <input type="radio" name="mode" id="mode-1" value="1" /><label for="mode-1" class="item">Pretraining</label><br />
+                            <input type="radio" name="mode" id="mode-2" value="2" /><label for="mode-2" class="item">Training</label><br />
+                            <input type="radio" name="mode" id="mode-3" value="3" /><label for="mode-3" class="item">Evaluation</label><br />
+                            <input type="radio" name="mode" id="mode-4" value="4" /><label for="mode-4" class="item">Full</label>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div id="pretraining-parm" style="display:none" class="options">
+                <table>
+                    <tr>
+                        <td>Pass Criteria</td>
+                        <td><input type="number" id="pass-criteria-pt" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Stimulus Pair Presentations</td>
+                        <td><input type="number" id="trials-pt" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>YES Pair Presentations</td>
+                        <td><input type="number" id="yes-trials-pt" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>NO Pair Presentations</td>
+                        <td><input type="number" id="no-trials-pt" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Contextual Cues?</td>
+                        <td>
+                            <input type="checkbox" id="cues-pt" />
+                            <div id="context-options-pt">
+                                <table>
+                                    <tr>
+                                        <td>Contextual Cue Text</td>
+                                        <td><textarea id="cue-text-pt"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>YES Button Text</td>
+                                        <td><textarea id="cue-yes-pt"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>NO Button Text</td>
+                                        <td><textarea id="cue-no-pt"></textarea></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
 
+                    <tr>
+                        <td>Instructions Pretraining</td>
+                        <td><textarea id="instructions-pt" cols="50" rows="10">Thank you for volunteering to participate in this experiment. A purpose of this experiment is to see how well people can detect when things "go-together". The experiment has several stages. The first stage is to help familiarize you with the procedure. In this first stage you will be presented with common words. It will be important to watch the screen closely during this first stage. At some points during this stage you will be asked if the two most recent words go together. To indicate if two words go together you will use the computers mouse to click the "YES" button – if the previous two words do not go together then click the "NO" button.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Instructions Pretraining Evaluation</td>
+                        <td><textarea id="instructions-pte" cols="50" rows="10">Now it is time to see how well you remember the stimuli that go together. In this next stage of the experiment you will see pairs of words followed by a chance to indicate whether or not those two words "go-together". If you had just seen a pair of words that go together indicate this by selecting the "YES" button. Use the "NO" button for those pairs that you see that are not meant to go together.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="training-parm" style="display:none" class="options">
+                <table>
+                    <tr>
+                        <td>First Stimulus Duration</td>
+                        <td><input type="number" id="first-duration-t" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Second Stimulus Duration</td>
+                        <td><input type="number" id="second-duration-t" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Within Pair Delay</td>
+                        <td><input type="number" id="within-t" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Between Pair Delay</td>
+                        <td><input type="number" id="between-t" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Stimulus Pair Presentations</td>
+                        <td><input type="number" id="trials-t" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Simultaneous Presentation?</td>
+                        <td><input type="checkbox" id="simultaneous-t" /></td>
+                    </tr>
+                    <tr>
+                        <td>Instructions</td>
+                        <td><textarea id="instructions-t" cols="50" rows="10">You are now ready for the next stage of the study. This stage is similar to the previous with one small change – the words you will see now are not real words. Your task will be to first to watch to see which nonsense words go together. Following that you will be asked to determine if pairs of words you see "go-together" or not. You may or may not be told if you are making the correct selection, however the program is recording your performance and the better you do the sooner the study will be over.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Locations</td>
+                    </tr>
+                                <tr>
+                                    <td>Pair 1</td>
+                                    <td>@writeLocations("training-1")</td>
+                                </tr>
+                                <tr>
+                                    <td>Pair 2</td>
+                                    <td>@writeLocations("training-2")</td>
+                                </tr>
+                                <tr>
+                                    <td>Pair 3</td>
+                                    <td>@writeLocations("training-3")</td>
+                                </tr>
+                                <tr>
+                                    <td>Pair 4</td>
+                                    <td>@writeLocations("training-4")</td>
+                                </tr>
+                                <tr>
+                                    <td>Pair 5</td>
+                                    <td>@writeLocations("training-5")</td>
+                                </tr>
+                                <tr>
+                                    <td>Pair 6</td>
+                                    <td>@writeLocations("training-6")</td>
+                                </tr>
+                </table>
+            </div>
+            <div id="evaluation-parm" style="display:none" class="options">
+                <table>
+                    <tr>
+                        <td>First Stimulus Duration</td>
+                        <td><input type="number" id="first-duration-e" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Second Stimulus Duration</td>
+                        <td><input type="number" id="second-duration-e" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Within Pair Delay</td>
+                        <td><input type="number" id="within-e" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Between Pair Delay</td>
+                        <td><input type="number" id="between-e" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>YES Pair Presentations</td>
+                        <td><input type="number" id="yes-trials-e" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>NO Pair Presentations</td>
+                        <td><input type="number" id="no-trials-e" min="0" max="100" /></td>
+                    </tr>
+                    <tr>
+                        <td>Show Feedback?</td>
+                        <td><input type="checkbox" id="feedback" /></td>
+                    </tr>
+                    <tr>
+                        <td>Symmetry Test?</td>
+                        <td>
+                            <input type="checkbox" id="symmetry" />
+                            <div id="symmetry-options">
+                                <table>
+                                    <tr>
+                                        <td>Pass Criteria</td>
+                                        <td><input type="number" id="symmetry-pass" min="0" max="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Locations</td>
+                                    </tr>
+
+                                                <tr>
+                                                    <td>Pair 1</td>
+                                                    <td>@writeLocations("symmetry-1")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 2</td>
+                                                    <td>@writeLocations("symmetry-2")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 3</td>
+                                                    <td>@writeLocations("symmetry-3")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 4</td>
+                                                    <td>@writeLocations("symmetry-4")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 5</td>
+                                                    <td>@writeLocations("symmetry-5")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 6</td>
+                                                    <td>@writeLocations("symmetry-6")</td>
+                                                </tr>
+
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Transitivity Test?</td>
+                        <td>
+                            <input type="checkbox" id="transitivity" />
+                            <div id="transitivity-options">
+                                <table>
+                                    <tr>
+                                        <td>Pass Criteria</td>
+                                        <td><input type="number" id="transitivity-pass" min="0" max="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Locations</td>
+                                    </tr>
+
+                                                <tr>
+                                                    <td>Pair 1</td>
+                                                    <td>@writeLocations("transitivity-1")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 2</td>
+                                                    <td>@writeLocations("transitivity-2")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 3</td>
+                                                    <td>@writeLocations("transitivity-3")</td>
+                                                </tr>
+
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Equivalence Test?</td>
+                        <td>
+                            <input type="checkbox" id="equivalence" />
+                            <div id="equivalence-options">
+                                <table>
+                                    <tr>
+                                        <td>Pass Criteria</td>
+                                        <td><input type="number" id="equivalence-pass" min="0" max="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Locations</td>
+                                    </tr>
+
+                                                <tr>
+                                                    <td>Pair 1</td>
+                                                    <td>@writeLocations("equivalence-1")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 2</td>
+                                                    <td>@writeLocations("equivalence-2")</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Pair 3</td>
+                                                    <td>@writeLocations("equivalence-3")</td>
+                                                </tr>
+
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Evaluation Test Order</td>
+                        <td>
+                            <select id="trial-order">
+                                <option value="1">Sequential</option>
+                                <option value="2">Mixed</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>YES Button Location</td>
+                        <td>@writeLocations("yes-loc")</td>
+                    </tr>
+                    <tr>
+                        <td>NO Button Location</td>
+                        <td>@writeLocations("no-loc")</td>
+                    </tr>
+                    <tr>
+                        <td>Contextual Cues?</td>
+                        <td>
+                            <input type="checkbox" id="cues-e" />
+                            <div id="context-options-e">
+                                <table>
+                                    <tr>
+                                        <td>Contextual Cue Text</td>
+                                        <td><textarea id="cue-text-e"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>YES Button Text</td>
+                                        <td><textarea id="cue-yes-e"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>NO Button Text</td>
+                                        <td><textarea id="cue-no-e"></textarea></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Instructions</td>
+                        <td><textarea id="instructions-e" cols="50" rows="10">Now you will be asked to determine if pairs of words you see "go-together" or not. You may or may not be told if you are making the correct selection, however the program is recording your performance and the better you do the sooner the study will be over.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Instructions for Retraining</td>
+                        <td><textarea id="instructions-rt" cols="50" rows="10">You have not met the minimum level of accuracy for this part of the test. You will now be redirected to the training phase of this experiment. After training, you will be given another attempt to pass the tests. Remember, the better you do the sooner the study will be over.&#13;&#10;&#13;&#10;Click the "START" button to proceed.</textarea></td>
+                    </tr>
+                    <tr>
+                        <td>Number of Retraining Attempts</td>
+                        <td><input type="number" id="retrain-limit" min="0" max="100" /></td>
+                    </tr>
+                </table>
+            </div>
         </div>
     </div>
 

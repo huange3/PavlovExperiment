@@ -101,6 +101,8 @@ namespace PavlovExperiment.Controllers
                         writer.WriteLine(currJSON);
                     }
 
+                    System.IO.File.SetCreationTime(fileName, currDate);
+
                     // start writing/formatting our file body
                     // GENERAL SECTION
                     fileBody += "GENERAL\n";
@@ -273,6 +275,8 @@ namespace PavlovExperiment.Controllers
                     {
                         writer.WriteLine(fileBody);
                     }
+
+                    System.IO.File.SetCreationTime(fileName, currDate);
 
                     returnVal = "Data saved successfully!";
                 }

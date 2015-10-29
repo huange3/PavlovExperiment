@@ -3,6 +3,8 @@
 // DOM element labels incoming...
 var mainMenu = $("#main-menu");
 var parameterMenu = $("#parameters-menu");
+var dataMenu = $("#data-menu");
+var goBackBtn = $("#go-back");
 var parameterBtn = $("#parameters");
 var dataLogBtn = $("#data-log");
 var startExpBtn = $("#start-experiment");
@@ -13,6 +15,7 @@ var instruction = $("#instruction");
 var instructionText = $("#instruction-text");
 var instructionClose = $("#start-btn");
 var spinner = $(".loading");
+var tableEnd = $("#data-table > tbody:last");
 
 var firstLabel = $("#first-stimulus");
 var secondLabel = $("#second-stimulus");
@@ -163,6 +166,7 @@ var equivStimulusList = [];
 var correctCount = 0;
 var phaseTrialCount = 0;
 var retrainCount = 0;
+var currDataLog;
 
 // STIMULUS POOL
 //var stimPool = [

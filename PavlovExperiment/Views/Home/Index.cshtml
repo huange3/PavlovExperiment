@@ -29,14 +29,14 @@
     @*  Parameters *@
     <div id="parameters-menu" style="display:none">
         <div class="menu">
-            <input type="radio" id="general-item" name="menu"/><label for="general-item" class="item block">General</label>
-            <input type="radio" id="pretraining-item" name="menu" /><label for="pretraining-item" class="item block">Pretraining</label>
-            <input type="radio" id="training-item" name="menu" /><label for="training-item" class="item block">Training</label>
-            <input type="radio" id="evaluation-item" name="menu" /><label for="evaluation-item" class="item block">Evaluation</label>
-            <div class="bottom small">
-                <div id="parm-save" class="btn block">Save</div>
-                <div id="parm-cancel" class="btn block">Cancel</div>
-            </div>
+                <input type="radio" id="general-item" name="menu" checked/><label for="general-item" class="item block">General</label>
+                <input type="radio" id="pretraining-item" name="menu" /><label for="pretraining-item" class="item block">Pretraining</label>
+                <input type="radio" id="training-item" name="menu" /><label for="training-item" class="item block">Training</label>
+                <input type="radio" id="evaluation-item" name="menu" /><label for="evaluation-item" class="item block">Evaluation</label>
+                <div class="bottom small">
+                    <div id="parm-save" class="btn block">Save</div>
+                    <div id="parm-cancel" class="btn block">Cancel</div>
+                </div>
         </div>
         <div class="menu-body">
             <div id="general-parm" style="display:none" class="options">
@@ -368,7 +368,24 @@
     </div>
 
     @*  Data access *@
-
+    <div id="data-menu" style="display:none">
+        <div class="menu">
+            <div class="bottom small">
+                <div id="go-back" class="btn block">Back</div>
+            </div>
+        </div>
+        <div class="menu-body">
+            <table id="data-table">
+                <tbody>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Creation Date</th>
+                        <th>Link</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
     @*  Start experiment *@
     <div id="board" style="display:none">
         <div id="first-stimulus" style="display:none"></div>

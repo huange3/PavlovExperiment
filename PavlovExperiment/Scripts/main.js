@@ -137,6 +137,13 @@ noBtn.click(function () {
     checkFeedback(0)
 });
 
+dataLogBtn.click(loadData);
+
+goBackBtn.click(function () {
+    dataMenu.hide();
+    mainMenu.show();
+})
+
 // FUNCTION DEFINITIONS //////////////////////////////////////////////
 
 function hideParameterMenu() {
@@ -453,6 +460,8 @@ function runExperiment() {
     mainMenu.hide();
     board.show();
 
+    spinner.show();
+
     loadParameters();
 
     if (currExp.mode == PretrainingMode){
@@ -464,6 +473,8 @@ function runExperiment() {
     } else {
         runPretraining();
     }
+
+    spinner.hide();
 }
 
 function runTrial() {
@@ -1033,8 +1044,6 @@ function endExperiment(addText) {
 
     currJSON = JSON.stringify(currExp);
 
-    console.log(currJSON);
-
     // send data to api
     $.post("../Data/Save", currJSON, function (data) {
         spinner.hide();
@@ -1045,7 +1054,20 @@ function endExperiment(addText) {
         } else {
             showPopup("Experiment completed! Thank you for participating! Please see the test conductor for further instructions.");
         }
+
+        dumpData();
     }); 
+}
+
+function dumpData() {
+     pretrainingTrials.length = 0;
+     pretrainingEvalTrials.length = 0;
+     trainingTrials.length = 0;
+     evaluationTrials.length = 0;
+     retrainingTrials.length = 0;
+     symmStimulusList.length = 0;
+     transStimulusList.length = 0;
+     equivStimulusList.length = 0;
 }
 
 function setBtnLocation(btn, locID) {
@@ -1101,16 +1123,15 @@ function checkFeedback(id) {
         responseLabel.css("color", "red");
     }
 
-    if (currExp.showFeedback) {
+    if (currPhase == EvaluationPhase && !currExp.showFeedback) {
+        nextBtn.show();
+    } else {
         responseLabel.show();
 
         setTimeout(function () {
             responseLabel.hide();
             nextBtn.show();
         }, 2000);
-    } else {
-        // proceed to the next btn
-        nextBtn.show();
     }   
 }
 
@@ -1124,6 +1145,47 @@ function checkAccuracy(){
     if (correctCount >= correctNeeded) return true;
 
     return false;
+}
+
+function loadData() {
+    spinner.show();
+
+    $.get("../Data/Load", function (data) {
+        currDataLog = data;
+
+        console.log(data);
+
+        if (currDataLog["error"] != null) {
+            spinner.hide();
+            showPopup(currDataLog["error"]);          
+            return;
+        }
+
+        mapData();
+        spinner.hide();
+    });
+}
+
+function mapData() {
+    var currFileName = "";
+    var currCreationDtm = "";
+    var currFilePath = "";
+    // empty our table
+    $("#data-table tr").slice(1).remove();
+
+    for (var i = 0; i < currDataLog.length; i++) {
+        currFileName = currDataLog[i].FileName;
+        currFilePath = currDataLog[i].FilePath;
+        currCreationDtm = currDataLog[i].FileCreationDtm;
+
+        //console.log(currFileName);
+
+        tableEnd.append("<tr><td>" + currFileName + "</td><td>" + currCreationDtm +
+            "</td><td><a href=\"../Data/" + currFileName + "\">Download</a></td></tr>");
+    }
+
+    mainMenu.hide();
+    dataMenu.show();
 }
 
 /**

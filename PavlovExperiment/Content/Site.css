@@ -35,7 +35,7 @@ table tr td:first-child{
 }
 
 .menu > input[type=radio]:checked + label {
-    color: #f1c40f;
+    color: #27C0DA;
 }
 
 .menu > input[type=radio]{

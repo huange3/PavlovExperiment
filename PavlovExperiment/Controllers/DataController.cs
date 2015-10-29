@@ -92,7 +92,7 @@ namespace PavlovExperiment.Controllers
 
                     currID = (string)dataObj["id"];
 
-                    currDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today, "Pacific Standard Time");
+                    currDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pacific Standard Time");
 
                     // save a copy of the JSON to Data
                     fileName = Server.MapPath("../Data") + "/" + currDate.ToString("yyyyMMdd") + "-" + currID + ".json";

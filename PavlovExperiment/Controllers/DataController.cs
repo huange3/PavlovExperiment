@@ -76,6 +76,7 @@ namespace PavlovExperiment.Controllers
             var currID = "";
             string fileBody = "";
             string fileName = "";
+            DateTime currDate;
 
             JObject dataObj = null;
             JArray trials = null;
@@ -91,8 +92,10 @@ namespace PavlovExperiment.Controllers
 
                     currID = (string)dataObj["id"];
 
+                    currDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.Today, "Pacific Standard Time");
+
                     // save a copy of the JSON to Data
-                    fileName = Server.MapPath("../Data") + "/" + DateTime.Today.ToString("yyyyMMdd") + "-" + currID + ".json";
+                    fileName = Server.MapPath("../Data") + "/" + currDate.ToString("yyyyMMdd") + "-" + currID + ".json";
                     using (writer = new StreamWriter(fileName))
                     {
                         writer.WriteLine(currJSON);
@@ -102,7 +105,7 @@ namespace PavlovExperiment.Controllers
                     // GENERAL SECTION
                     fileBody += "GENERAL\n";
                     fileBody += "Version," + dataObj["version"] + "\n";
-                    fileBody += "Date," + DateTime.Today.ToString("MM-dd-yyyy") + "\n";
+                    fileBody += "Date," + currDate.ToString("MM-dd-yyyy") + "\n";
                     fileBody += "Participant ID," + currID + "\n";
                     fileBody += "Mode," + dataObj["mode"] + "\n";
                     fileBody += "\n";
@@ -265,7 +268,7 @@ namespace PavlovExperiment.Controllers
                     fileBody += "\n";
 
                     // write to App_Data
-                    fileName = Server.MapPath("../Data") + "/" + DateTime.Today.ToString("yyyyMMdd") + "-" + currID + ".csv";
+                    fileName = Server.MapPath("../Data") + "/" + currDate.ToString("yyyyMMdd") + "-" + currID + ".csv";
                     using (writer = new StreamWriter(fileName))
                     {
                         writer.WriteLine(fileBody);

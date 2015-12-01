@@ -128,7 +128,7 @@ namespace PavlovExperiment.Controllers
                     trials = (JArray)dataObj["ptTrialList"];
 
                     fileBody += "PRETRAINING TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type\n";
+                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -140,7 +140,9 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"];
+                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testDesc"] + ",";
+                        fileBody += trials[i]["notes"];
                         fileBody += "\n";
                     }
 
@@ -150,7 +152,7 @@ namespace PavlovExperiment.Controllers
                     trials = (JArray)dataObj["pteTrialList"];
 
                     fileBody += "PRETRAINING EVALUATION TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type\n";
+                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -162,7 +164,9 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"];
+                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testDesc"] + ",";
+                        fileBody += trials[i]["notes"];
                         fileBody += "\n";
                     }
 
@@ -188,7 +192,7 @@ namespace PavlovExperiment.Controllers
                     trials = (JArray)dataObj["tTrialList"];
 
                     fileBody += "TRAINING TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type\n";
+                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -200,7 +204,9 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"];
+                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testDesc"] + ",";
+                        fileBody += trials[i]["notes"];
                         fileBody += "\n";
                     }
 
@@ -251,7 +257,7 @@ namespace PavlovExperiment.Controllers
                     trials = (JArray)dataObj["eTrialList"];
 
                     fileBody += "EVALUATION TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type\n";
+                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -263,7 +269,33 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"];
+                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testDesc"] + ",";
+                        fileBody += trials[i]["notes"];
+                        fileBody += "\n";
+                    }
+
+                    fileBody += "\n";
+
+                    // RETRAINING TRIALS SECTION
+                    trials = (JArray)dataObj["rtTrialList"];
+
+                    fileBody += "RETRAINING TRIALS\n";
+                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
+
+                    for (var i = 0; i < trials.Count; i++)
+                    {
+                        fileBody += trials[i]["phase"] + ",";
+                        fileBody += trials[i]["A"] + ",";
+                        fileBody += trials[i]["B"] + ",";
+                        fileBody += trials[i]["type"] + ",";
+                        fileBody += trials[i]["location"] + ",";
+                        fileBody += trials[i]["latency"] + ",";
+                        fileBody += trials[i]["userAnswer"] + ",";
+                        fileBody += trials[i]["isCorrect"] + ",";
+                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testDesc"] + ",";
+                        fileBody += trials[i]["notes"];
                         fileBody += "\n";
                     }
 

@@ -120,6 +120,7 @@ const PretrainingPhase = 1;
 const PretrainingEvalPhase = 2;
 const TrainingPhase = 3;
 const EvaluationPhase = 4;
+const RetrainingPhase = 5;
 
 // TEST IDs
 const SymmetryID = 1;

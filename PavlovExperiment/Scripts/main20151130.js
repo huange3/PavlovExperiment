@@ -68,7 +68,8 @@ var currExp = {
     "ptTrialList": "",
     "pteTrialList": "",
     "tTrialList": "",
-    "eTrialList": ""
+    "eTrialList": "",
+    "rtTrialList": ""
 };
 
 var trialObj = {
@@ -80,7 +81,9 @@ var trialObj = {
     "latency": "",
     "userAnswer": "",
     "isCorrect": "",
-    "test": ""
+    "test": "",
+    "testDesc": "",
+    "notes": ""
 };
 
 
@@ -560,16 +563,55 @@ function runTrial() {
             // down the rabbit hole we gooooooo~
             setTimeout(firstTimerTick, firstDuration);
         }
+    } else if (currPhase == RetrainingPhase) {
+        if (stimulusList.length == 0) {
+            runEvaluation();
+        } else {
+            currStimulus = stimulusList.pop();
+
+            currTrial = setupTrial(currStimulus);
+
+            //console.log(currTrial);
+
+            board.css("background", "#FFF");
+            firstLabel.text(currTrial.A);
+            setBtnLocation(firstLabel, parseInt(currTrial.location));
+
+            // check if we have simulataneous presentations enabled
+            if (currExp.tSimultaneous) {
+                secondLabel.html(currTrial.A + "&nbsp;&nbsp;&nbsp;" + currTrial.B).text();
+            } else {
+                secondLabel.text(currTrial.B);
+            }
+
+            setBtnLocation(secondLabel, parseInt(currTrial.location));
+
+            firstLabel.show();
+
+            // down the rabbit hole we gooooooo~
+            setTimeout(firstTimerTick, firstDuration);
+        }
     }
 }
 
-function runEvaluationTrial() {
+function createNoteTrial() {
+    var noteTrial = Object.create(trialObj);
+
+    noteTrial.phase = currPhase;
+    noteTrial.notes = "Failed to meet required accuracy. Retraining.";
+
+    evaluationTrials.push(noteTrial);   
+}
+
+function runEvaluationTrial() {   
     // Remember to check the accuracy before progressing to different tests
     // or ending the experiment.
 
     // Scenario 1: We're done!
     if (testList.length == 0 && stimulusList.length == 0) {
         if (!checkAccuracy()) {
+            createNoteTrial();
+
             retrainCount++;
 
             if (retrainCount > currExp.retrainLimit) {
@@ -586,6 +628,8 @@ function runEvaluationTrial() {
     // Scenario 2: We still have more tests to do!
     if (stimulusList.length == 0) {
         if (!checkAccuracy()) {
+            createNoteTrial();
+
             retrainCount++;
 
             if (retrainCount > currExp.retrainLimit) {
@@ -665,6 +709,18 @@ function setupTrial(stim) {
 
     if (currPhase == EvaluationPhase) {
         temp.test = currTest;
+
+        switch (currTest) {
+            case SymmetryID:
+                temp.testDesc = "Symmetry";
+                break;
+            case TransitivityID:
+                temp.testDesc = "Transitivity";
+                break;
+            case EquivalenceID:
+                temp.testDesc = "Equivalence";
+                break;
+        }
     }
 
     return temp;
@@ -687,7 +743,7 @@ function secondTimerTick() {
 
     board.css("background", "#000");
 
-    if (currPhase == PretrainingPhase || currPhase == TrainingPhase) {
+    if (currPhase == PretrainingPhase || currPhase == TrainingPhase || currPhase == RetrainingPhase) {
         setTimeout(betweenTimerTick, betweenDuration);
     } else if (currPhase == EvaluationPhase) {
         // in the evaluation phase, we have the option of random placement of the
@@ -713,7 +769,7 @@ function secondTimerTick() {
 }
 
 function betweenTimerTick() {
-    if (currPhase == PretrainingPhase || currPhase == TrainingPhase) {
+    if (currPhase == PretrainingPhase || currPhase == TrainingPhase || currPhase == RetrainingPhase) {
         nextBtn.show();
         stopWatch.start();
     }
@@ -721,7 +777,8 @@ function betweenTimerTick() {
 
 function nextBtnClick() {
     if (currPhase == PretrainingPhase
-        || currPhase == TrainingPhase) stopWatch.stop(); // stopwatch already stopped in other phases
+        || currPhase == TrainingPhase
+        || currPhase == RetrainingPhase) stopWatch.stop(); // stopwatch already stopped in other phases
 
     nextBtn.hide();
 
@@ -754,6 +811,9 @@ function logTrial() {
             break;
         case EvaluationPhase:
             evaluationTrials.push(currTrial);
+            break;
+        case RetrainingPhase:
+            retrainingTrials.push(currTrial);
             break;
     }
 }
@@ -898,7 +958,7 @@ function setupTraining() {
 }
 
 function setupRetraining() {
-    currPhase = TrainingPhase;
+    currPhase = RetrainingPhase;
 
     stimulusList.length = 0; // clear the array
 
@@ -1041,6 +1101,7 @@ function endExperiment(addText) {
     currExp.pteTrialList = pretrainingEvalTrials.slice();
     currExp.tTrialList = trainingTrials.slice();
     currExp.eTrialList = evaluationTrials.slice();
+    currExp.rtTrialList = retrainingTrials.slice();
 
     currJSON = JSON.stringify(currExp);
 

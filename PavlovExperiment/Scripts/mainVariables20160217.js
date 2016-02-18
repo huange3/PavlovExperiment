@@ -1,4 +1,4 @@
-﻿// GLOBALS //////////////////////////////////////////////
+﻿// GLOBALS ////////////////////*//////////////////////////
 
 // DOM element labels incoming...
 var mainMenu = $("#main-menu");
@@ -24,6 +24,7 @@ var yesBtn = $("#yes-btn");
 var noBtn = $("#no-btn");
 var responseLabel = $("#response");
 var board = $("#board");
+var contextCueLabel = $("#context-cue");
 
 var menuGeneralItem = $("#general-item");
 var menuPretrainingItem = $("#pretraining-item");
@@ -38,6 +39,7 @@ var trainingParm = $("#training-parm");
 var evaluationParm = $("#evaluation-parm");
 var parmArray = [generalParm, pretrainingParm, trainingParm, evaluationParm];
 
+var versionLB = $("#version");
 var participantIDLB = $("#participant-id");
 var ptPassCriteriaLB = $("#pass-criteria-pt");
 var ptTrialsLB = $("#trials-pt");
@@ -45,6 +47,7 @@ var ptYesTrialsLB = $("#yes-trials-pt");
 var ptNoTrialsLB = $("#no-trials-pt");
 var ptContextLB = $("#cues-pt");
 var ptContextTextLB = $("#cue-text-pt");
+var ptContextLocLB = $("#cue-location-pt");
 var ptContextYesLB = $("#cue-yes-pt");
 var ptContextNoLB = $("#cue-no-pt");
 var ptInstructionsLB = $("#instructions-pt");
@@ -56,27 +59,26 @@ var tWithinLB = $("#within-t");
 var tBetweenLB = $("#between-t");
 var tTrialsLB = $("#trials-t");
 var tSimultaneousLB = $("#simultaneous-t");
+var tContextLB = $("#cues-t");
+var tContextTextLB = $("#cue-text-t");
+var tContextLocLB = $("#cue-location-t");
+var tContextYesLB = $("#cue-yes-t");
+var tContextNoLB = $("#cue-no-t");
 var tInstructionsLB = $("#instructions-t");
 var rtInstructionsLB = $("#instructions-rt");
-var tLocation1LB = $("#training-1");
-var tLocation2LB = $("#training-2");
-var tLocation3LB = $("#training-3");
-var tLocation4LB = $("#training-4");
-var tLocation5LB = $("#training-5");
-var tLocation6LB = $("#training-6");
 
 var eFirstDurationLB = $("#first-duration-e");
 var eSecondDurationLB = $("#second-duration-e");
 var eWithinLB = $("#within-e");
 var eBetweenLB = $("#between-e");
-var eYesTrialsLB = $("#yes-trials-e");
-var eNoTrialsLB = $("#no-trials-e");
+
 var eFeedbackLB = $("#feedback");
 var eTrialOrderLB = $("#trial-order");
 var yesLocationLB = $("#yes-loc");
 var noLocationLB = $("#no-loc");
 var eContextLB = $("#cues-e");
 var eContextTextLB = $("#cue-text-e");
+var eContextLocLB = $("#cue-location-e");
 var eContextYesLB = $("#cue-yes-e");
 var eContextNoLB = $("#cue-no-e");
 var eInstructionsLB = $("#instructions-e");
@@ -84,24 +86,18 @@ var retrainLB = $("#retrain-limit");
 
 var symmetryLB = $("#symmetry");
 var symmPassLB = $("#symmetry-pass");
-var symmLocation1LB = $("#symmetry-1");
-var symmLocation2LB = $("#symmetry-2");
-var symmLocation3LB = $("#symmetry-3");
-var symmLocation4LB = $("#symmetry-4");
-var symmLocation5LB = $("#symmetry-5");
-var symmLocation6LB = $("#symmetry-6");
+var symmYesTrialsLB = $("#yes-trials-symmetry");
+var symmNoTrialsLB = $("#no-trials-symmetry");
 
 var transitivityLB = $("#transitivity");
 var transPassLB = $("#transitivity-pass");
-var transLocation1LB = $("#transitivity-1");
-var transLocation2LB = $("#transitivity-2");
-var transLocation3LB = $("#transitivity-3");
+var transYesTrialsLB = $("#yes-trials-transitivity");
+var transNoTrialsLB = $("#no-trials-transitivity");
 
 var equivalenceLB = $("#equivalence");
 var equivPassLB = $("#equivalence-pass");
-var equivLocation1LB = $("#equivalence-1");
-var equivLocation2LB = $("#equivalence-2");
-var equivLocation3LB = $("#equivalence-3");
+var equivYesTrialsLB = $("#yes-trials-equivalence");
+var equivNoTrialsLB = $("#no-trials-equivalence");
 
 // MENU IDs
 const GeneralID = 0;
@@ -138,6 +134,15 @@ const TopRight = 3;
 const BottomLeft = 4;
 const BottomRight = 5;
 const RandomLocation = 6;
+const TopCenter = 7;
+const BottomCenter = 8;
+
+// STIMULI ROW COUNTS
+const PretrainingRows = 7;
+const TrainingRows = 3;
+const SymmetryRows = 6;
+const TransitivityRows = 3;
+const EquivalenceRows = 3;
 
 // TIMER INTERVALS
 var firstDuration = 0;
@@ -166,6 +171,12 @@ var transStimulusList = [];
 var equivStimulusList = [];
 var correctCount = 0;
 var phaseTrialCount = 0;
+var symmTrialCount = 0;
+var symmCorrectCount = 0;
+var transTrialCount = 0;
+var transCorrectCount = 0;
+var equivTrialCount = 0;
+var equivCorrectCount = 0;
 var retrainCount = 0;
 var currDataLog;
 

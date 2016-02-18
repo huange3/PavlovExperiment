@@ -1,5 +1,7 @@
-﻿@{ 
+﻿@{
     var currDate = DateTime.Now.ToString("MM-dd-yyyy");
+    var pretrainingRows = 7;
+    var trainingRows = 3;
 }
 
 @helper writeLocations(string currID){
@@ -15,7 +17,35 @@
             <option value="6">Random</option>
         }
 
+       <option value="7">Top Center</option>
+       <option value="8">Bottom Center</option>
         </select>
+}
+
+@helper writeStimuliPairs(string currID, int numRows) { 
+    <table class="mcenter">
+        @for (int i = 1; i <= numRows; i++)
+        {
+            <tr>
+                <td><input type="text" id="@currID-@i-1" value="" /></td>
+                <td>@writeLocations(currID + "-loc-" + i + "-1")</td>
+                <td><input type="text" id="@currID-@i-2" value="" /></td>
+                <td>@writeLocations(currID + "-loc-" + i + "-2")</td>
+            </tr>
+        }
+    </table>
+    }
+
+@helper writeStimuliSets(string currID, int numRows) {
+    <table class="mcenter">
+        @for (int i = 1; i <= numRows; i++)
+        {
+            <tr>
+                <td><input type="text" id="@currID-@i" value="" /></td>
+                <td>@writeLocations(currID + "-loc-" + i)</td>
+            </tr>
+        }
+    </table>
 }
 
 <div class="wrapper wrapper-bg">
@@ -40,10 +70,10 @@
         </div>
         <div class="menu-body">
             <div id="general-parm" style="display:none" class="options">
-                <table>
+                <table class="mcenter">
                     <tr>
                         <td>Version</td>
-                        <td><input type="text" id="version" value="1.0.1" readonly /></td>
+                        <td><input type="text" id="version" value="1.2.0" readonly /></td>
                     </tr>
                     <tr>
                         <td>Date</td>
@@ -67,7 +97,7 @@
                 </table>
             </div>
             <div id="pretraining-parm" style="display:none" class="options">
-                <table>
+                <table class="mcenter">
                     <tr>
                         <td>Pass Criteria</td>
                         <td><input type="number" id="pass-criteria-pt" min="0" max="100" /></td>
@@ -95,6 +125,10 @@
                                         <td><textarea id="cue-text-pt"></textarea></td>
                                     </tr>
                                     <tr>
+                                        <td>Context location</td>
+                                        <td>@writeLocations("cue-location-pt")</td>
+                                    </tr>
+                                    <tr>
                                         <td>YES Button Text</td>
                                         <td><textarea id="cue-yes-pt"></textarea></td>
                                     </tr>
@@ -106,7 +140,6 @@
                             </div>
                         </td>
                     </tr>
-
                     <tr>
                         <td>Instructions Pretraining</td>
                         <td><textarea id="instructions-pt" cols="50" rows="10">Thank you for volunteering to participate in this experiment. A purpose of this experiment is to see how well people can detect when things "go-together". The experiment has several stages. The first stage is to help familiarize you with the procedure. In this first stage you will be presented with common words. It will be important to watch the screen closely during this first stage. At some points during this stage you will be asked if the two most recent words go together. To indicate if two words go together you will use the computers mouse to click the "YES" button – if the previous two words do not go together then click the "NO" button.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
@@ -116,9 +149,17 @@
                         <td><textarea id="instructions-pte" cols="50" rows="10">Now it is time to see how well you remember the stimuli that go together. In this next stage of the experiment you will see pairs of words followed by a chance to indicate whether or not those two words "go-together". If you had just seen a pair of words that go together indicate this by selecting the "YES" button. Use the "NO" button for those pairs that you see that are not meant to go together.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
                     </tr>
                 </table>
+                <br />                                         
+                <div class="tcenter">
+                    <div>YES Stimuli Pairs</div>
+                    @writeStimuliPairs("ptYes", pretrainingRows)
+                    <br />
+                    <div>NO Stimuli Pairs</div>
+                    @writeStimuliPairs("ptNo", pretrainingRows)
+                </div>
             </div>
             <div id="training-parm" style="display:none" class="options">
-                <table>
+                <table class="mcenter">
                     <tr>
                         <td>First Stimulus Duration</td>
                         <td><input type="number" id="first-duration-t" min="0" max="100" /></td>
@@ -144,40 +185,50 @@
                         <td><input type="checkbox" id="simultaneous-t" /></td>
                     </tr>
                     <tr>
+                        <td>Contextual Cues?</td>
+                        <td>
+                            <input type="checkbox" id="cues-t" />
+                            <div id="context-options-t">
+                                <table>
+                                    <tr>
+                                        <td>Contextual Cue Text</td>
+                                        <td><textarea id="cue-text-t"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Context location</td>
+                                        <td>@writeLocations("cue-location-t")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>YES Button Text</td>
+                                        <td><textarea id="cue-yes-t"></textarea></td>
+                                    </tr>
+                                    <tr>
+                                        <td>NO Button Text</td>
+                                        <td><textarea id="cue-no-t"></textarea></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
                         <td>Instructions</td>
                         <td><textarea id="instructions-t" cols="50" rows="10">You are now ready for the next stage of the study. This stage is similar to the previous with one small change – the words you will see now are not real words. Your task will be to first to watch to see which nonsense words go together. Following that you will be asked to determine if pairs of words you see "go-together" or not. You may or may not be told if you are making the correct selection, however the program is recording your performance and the better you do the sooner the study will be over.&#13;&#10;&#13;&#10;Click the "START" button to begin.</textarea></td>
                     </tr>
-                    <tr>
-                        <td>Locations</td>
-                    </tr>
-                                <tr>
-                                    <td>Pair 1</td>
-                                    <td>@writeLocations("training-1")</td>
-                                </tr>
-                                <tr>
-                                    <td>Pair 2</td>
-                                    <td>@writeLocations("training-2")</td>
-                                </tr>
-                                <tr>
-                                    <td>Pair 3</td>
-                                    <td>@writeLocations("training-3")</td>
-                                </tr>
-                                <tr>
-                                    <td>Pair 4</td>
-                                    <td>@writeLocations("training-4")</td>
-                                </tr>
-                                <tr>
-                                    <td>Pair 5</td>
-                                    <td>@writeLocations("training-5")</td>
-                                </tr>
-                                <tr>
-                                    <td>Pair 6</td>
-                                    <td>@writeLocations("training-6")</td>
-                                </tr>
-                </table>
+                    </table>
+                <br />
+                <div class="tcenter">
+                    <div>Stimuli Set 1</div>
+                    @writeStimuliSets("training-1", trainingRows)
+                    <br />
+                    <div>Stimuli Set 2</div>
+                    @writeStimuliSets("training-2", trainingRows)
+                    <br />
+                    <div>Stimuli Set 3</div>
+                    @writeStimuliSets("training-3", trainingRows)
+                </div>
             </div>
             <div id="evaluation-parm" style="display:none" class="options">
-                <table>
+                <table class="mcenter">
                     <tr>
                         <td>First Stimulus Duration</td>
                         <td><input type="number" id="first-duration-e" min="0" max="100" /></td>
@@ -195,14 +246,6 @@
                         <td><input type="number" id="between-e" min="0" max="100" /></td>
                     </tr>
                     <tr>
-                        <td>YES Pair Presentations</td>
-                        <td><input type="number" id="yes-trials-e" min="0" max="100" /></td>
-                    </tr>
-                    <tr>
-                        <td>NO Pair Presentations</td>
-                        <td><input type="number" id="no-trials-e" min="0" max="100" /></td>
-                    </tr>
-                    <tr>
                         <td>Show Feedback?</td>
                         <td><input type="checkbox" id="feedback" /></td>
                     </tr>
@@ -217,34 +260,49 @@
                                         <td><input type="number" id="symmetry-pass" min="0" max="100" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Locations</td>
+                                        <td>YES Stimuli Set Presentations</td>
+                                        <td><input type="number" id="yes-trials-symmetry" min="0" max="100" /></td>
                                     </tr>
-
-                                                <tr>
-                                                    <td>Pair 1</td>
-                                                    <td>@writeLocations("symmetry-1")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 2</td>
-                                                    <td>@writeLocations("symmetry-2")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 3</td>
-                                                    <td>@writeLocations("symmetry-3")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 4</td>
-                                                    <td>@writeLocations("symmetry-4")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 5</td>
-                                                    <td>@writeLocations("symmetry-5")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 6</td>
-                                                    <td>@writeLocations("symmetry-6")</td>
-                                                </tr>
-
+                                    <tr>
+                                        <td>NO Stimuli Set Presentations</td>
+                                        <td><input type="number" id="no-trials-symmetry" min="0" max="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>B1</td>
+                                        <td>@writeLocations("symmetry-1-1")</td>
+                                        <td>A1</td>
+                                        <td>@writeLocations("symmetry-1-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>C1</td>
+                                        <td>@writeLocations("symmetry-2-1")</td>
+                                        <td>B1</td>
+                                        <td>@writeLocations("symmetry-2-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>B2</td>
+                                        <td>@writeLocations("symmetry-3-1")</td>
+                                        <td>A2</td>
+                                        <td>@writeLocations("symmetry-3-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>C2</td>
+                                        <td>@writeLocations("symmetry-4-1")</td>
+                                        <td>B2</td>
+                                        <td>@writeLocations("symmetry-4-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>B3</td>
+                                        <td>@writeLocations("symmetry-5-1")</td>
+                                        <td>A3</td>
+                                        <td>@writeLocations("symmetry-5-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>C3</td>
+                                        <td>@writeLocations("symmetry-6-1")</td>
+                                        <td>B3</td>
+                                        <td>@writeLocations("symmetry-6-2")</td>
+                                    </tr>
                                 </table>
                             </div>
                         </td>
@@ -260,22 +318,31 @@
                                         <td><input type="number" id="transitivity-pass" min="0" max="100" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Locations</td>
+                                        <td>YES Stimuli Set Presentations</td>
+                                        <td><input type="number" id="yes-trials-transitivity" min="0" max="100" /></td>
                                     </tr>
-
-                                                <tr>
-                                                    <td>Pair 1</td>
-                                                    <td>@writeLocations("transitivity-1")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 2</td>
-                                                    <td>@writeLocations("transitivity-2")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 3</td>
-                                                    <td>@writeLocations("transitivity-3")</td>
-                                                </tr>
-
+                                    <tr>
+                                        <td>NO Stimuli Set Presentations</td>
+                                        <td><input type="number" id="no-trials-transitivity" min="0" max="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>A1</td>
+                                        <td>@writeLocations("transitivity-1-1")</td>
+                                        <td>C1</td>
+                                        <td>@writeLocations("transitivity-1-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>A2</td>
+                                        <td>@writeLocations("transitivity-2-1")</td>
+                                        <td>C2</td>
+                                        <td>@writeLocations("transitivity-2-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>A3</td>
+                                        <td>@writeLocations("transitivity-3-1")</td>
+                                        <td>C3</td>
+                                        <td>@writeLocations("transitivity-3-2")</td>
+                                    </tr>
                                 </table>
                             </div>
                         </td>
@@ -291,22 +358,31 @@
                                         <td><input type="number" id="equivalence-pass" min="0" max="100" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Locations</td>
+                                        <td>YES Stimuli Set Presentations</td>
+                                        <td><input type="number" id="yes-trials-equivalence" min="0" max="100" /></td>
                                     </tr>
-
-                                                <tr>
-                                                    <td>Pair 1</td>
-                                                    <td>@writeLocations("equivalence-1")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 2</td>
-                                                    <td>@writeLocations("equivalence-2")</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Pair 3</td>
-                                                    <td>@writeLocations("equivalence-3")</td>
-                                                </tr>
-
+                                    <tr>
+                                        <td>NO Stimuli Set Presentations</td>
+                                        <td><input type="number" id="no-trials-equivalence" min="0" max="100" /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>C1</td>
+                                        <td>@writeLocations("equivalence-1-1")</td>
+                                        <td>A1</td>
+                                        <td>@writeLocations("equivalence-1-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>C2</td>
+                                        <td>@writeLocations("equivalence-2-1")</td>
+                                        <td>A2</td>
+                                        <td>@writeLocations("equivalence-2-2")</td>
+                                    </tr>
+                                    <tr>
+                                        <td>C3</td>
+                                        <td>@writeLocations("equivalence-3-1")</td>
+                                        <td>A3</td>
+                                        <td>@writeLocations("equivalence-3-2")</td>
+                                    </tr>
                                 </table>
                             </div>
                         </td>
@@ -339,6 +415,10 @@
                                         <td><textarea id="cue-text-e"></textarea></td>
                                     </tr>
                                     <tr>
+                                        <td>Context location</td>
+                                        <td>@writeLocations("cue-location-e")</td>
+                                    </tr>
+                                    <tr>
                                         <td>YES Button Text</td>
                                         <td><textarea id="cue-yes-e"></textarea></td>
                                     </tr>
@@ -366,7 +446,6 @@
             </div>
         </div>
     </div>
-
     @*  Data access *@
     <div id="data-menu" style="display:none">
         <div class="menu">
@@ -375,7 +454,7 @@
             </div>
         </div>
         <div class="menu-body">
-            <table id="data-table">
+            <table id="data-table" class="mcenter">
                 <tbody>
                     <tr>
                         <th>File Name</th>
@@ -390,7 +469,7 @@
     <div id="board" style="display:none">
         <div id="first-stimulus" style="display:none"></div>
         <div id="second-stimulus" style="display:none"></div>
-
+        <div id="context-cue" style="display:none"></div>
         <div id="next-btn" class="btn block center" style="display:none">Present the Next Pair</div>
         <div id="yes-btn" class="btn block" style="display:none">YES</div>
         <div id="no-btn" class="btn block" style="display:none">NO</div>

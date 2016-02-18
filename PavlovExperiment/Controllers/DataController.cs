@@ -80,6 +80,7 @@ namespace PavlovExperiment.Controllers
 
             JObject dataObj = null;
             JArray trials = null;
+            JArray locations = null;
             StreamWriter writer = null;
 
             try
@@ -95,7 +96,7 @@ namespace PavlovExperiment.Controllers
                     currDate = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Pacific Standard Time");
 
                     // save a copy of the JSON to Data
-                    fileName = Server.MapPath("../Data") + "/" + currDate.ToString("yyyyMMdd") + "-" + currID + ".json";
+                    fileName = Server.MapPath("../Data") + "/" + currDate.ToString("yyyyMMdd-hhmmss") + "-" + currID + ".json";
                     using (writer = new StreamWriter(fileName))
                     {
                         writer.WriteLine(currJSON);
@@ -115,20 +116,57 @@ namespace PavlovExperiment.Controllers
                     // PRETRAINING SECTION
                     fileBody += "PRETRAINING\n";
                     fileBody += "Pass Criteria," + dataObj["ptPassCriteria"] + "\n";
-                    fileBody += "Trials," + dataObj["ptTrials"] + "\n";
-                    fileBody += "Yes Trials," + dataObj["ptYesTrials"] + "\n";
-                    fileBody += "No Trials," + dataObj["ptNoTrials"] + "\n";
+                    fileBody += "Stimulus Trials," + dataObj["ptTrials"] + "\n";
+                    fileBody += "Yes Set Trials," + dataObj["ptYesTrials"] + "\n";
+                    fileBody += "No Set Trials," + dataObj["ptNoTrials"] + "\n";
                     fileBody += "Context Enabled," + dataObj["ptContextEnabled"] + "\n";
+                    fileBody += "Context Location," + dataObj["ptContextLoc"] + "\n";
                     fileBody += "Context Text," + dataObj["ptContextText"] + "\n";
                     fileBody += "Context Yes Text," + dataObj["ptContextYesText"] + "\n";
                     fileBody += "Context No Text," + dataObj["ptContextNoText"] + "\n";
                     fileBody += "\n";
-                    
+
+                    // PRETRAINING STIMULI AND LOCATIONS SECTION
+                    locations = (JArray)dataObj["ptYesPairs"];
+
+                    fileBody += "PRETRAINING YES STIMULI\n";
+                    fileBody += "A,B,Type,A Location,B Location\n";
+
+                    for (var i = 0; i < locations.Count; i++)
+                    {
+                        fileBody += locations[i]["A"] + ",";
+                        fileBody += locations[i]["B"] + ",";
+                        fileBody += locations[i]["type"] + ",";
+                        fileBody += locations[i]["ALocation"] + ",";
+                        fileBody += locations[i]["BLocation"] + ",";
+                        fileBody += "\n";
+                    }
+
+                    fileBody += "\n";
+
+                    // PRETRAINING STIMULI AND LOCATIONS SECTION
+                    locations = (JArray)dataObj["ptNoPairs"];
+
+                    fileBody += "PRETRAINING NO STIMULI\n";
+                    fileBody += "A,B,Type,A Location,B Location\n";
+
+                    for (var i = 0; i < locations.Count; i++)
+                    {
+                        fileBody += locations[i]["A"] + ",";
+                        fileBody += locations[i]["B"] + ",";
+                        fileBody += locations[i]["type"] + ",";
+                        fileBody += locations[i]["ALocation"] + ",";
+                        fileBody += locations[i]["BLocation"] + ",";
+                        fileBody += "\n";
+                    }
+
+                    fileBody += "\n";
+
                     // PRETRAINING TRIALS SECTION
                     trials = (JArray)dataObj["ptTrialList"];
 
                     fileBody += "PRETRAINING TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
+                    fileBody += "Phase,A,B,Type,A Location,B Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -136,11 +174,12 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["A"] + ",";
                         fileBody += trials[i]["B"] + ",";
                         fileBody += trials[i]["type"] + ",";
-                        fileBody += trials[i]["location"] + ",";
+                        fileBody += trials[i]["ALocation"] + ",";
+                        fileBody += trials[i]["BLocation"] + ",";
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testID"] + ",";
                         fileBody += trials[i]["testDesc"] + ",";
                         fileBody += trials[i]["notes"];
                         fileBody += "\n";
@@ -152,7 +191,7 @@ namespace PavlovExperiment.Controllers
                     trials = (JArray)dataObj["pteTrialList"];
 
                     fileBody += "PRETRAINING EVALUATION TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
+                    fileBody += "Phase,A,B,Type,A Location,B Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -160,11 +199,12 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["A"] + ",";
                         fileBody += trials[i]["B"] + ",";
                         fileBody += trials[i]["type"] + ",";
-                        fileBody += trials[i]["location"] + ",";
+                        fileBody += trials[i]["ALocation"] + ",";
+                        fileBody += trials[i]["BLocation"] + ",";
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testID"] + ",";
                         fileBody += trials[i]["testDesc"] + ",";
                         fileBody += trials[i]["notes"];
                         fileBody += "\n";
@@ -178,21 +218,40 @@ namespace PavlovExperiment.Controllers
                     fileBody += "Second Duration," + dataObj["tSecondDuration"] + "\n";
                     fileBody += "Within Duration," + dataObj["tWithinDuration"] + "\n";
                     fileBody += "Between Duration," + dataObj["tBetweenDuration"] + "\n";
-                    fileBody += "Trials," + dataObj["tTrials"] + "\n";
+                    fileBody += "Stimulus Trials," + dataObj["tTrials"] + "\n";
                     fileBody += "Simultaneous Presentation," + dataObj["tSimultaneous"] + "\n";
-                    fileBody += "Location 1," + dataObj["tLocation1"] + "\n";
-                    fileBody += "Location 2," + dataObj["tLocation2"] + "\n";
-                    fileBody += "Location 3," + dataObj["tLocation3"] + "\n";
-                    fileBody += "Location 4," + dataObj["tLocation4"] + "\n";
-                    fileBody += "Location 5," + dataObj["tLocation5"] + "\n";
-                    fileBody += "Location 6," + dataObj["tLocation6"] + "\n";
+                    fileBody += "Context Enabled," + dataObj["tContextEnabled"] + "\n";
+                    fileBody += "Context Location," + dataObj["tContextLoc"] + "\n";
+                    fileBody += "Context Text," + dataObj["tContextText"] + "\n";
+                    fileBody += "Context Yes Text," + dataObj["tContextYesText"] + "\n";
+                    fileBody += "Context No Text," + dataObj["tContextNoText"] + "\n";
                     fileBody += "\n";
 
-                    // PRETRAINING EVALUATION TRIALS SECTION
+                    // TRAINING STIMULI SECTION
+                    locations = (JArray)dataObj["stimuliSets"];
+
+                    fileBody += "TRAINING STIMULI\n";
+                    fileBody += "A,B,C,Type,A Location,B Location,C Location\n";
+
+                    for (var i = 0; i < locations.Count; i++)
+                    {
+                        fileBody += locations[i]["A"] + ",";
+                        fileBody += locations[i]["B"] + ",";
+                        fileBody += locations[i]["C"] + ",";
+                        fileBody += locations[i]["type"] + ",";
+                        fileBody += locations[i]["ALocation"] + ",";
+                        fileBody += locations[i]["BLocation"] + ",";
+                        fileBody += locations[i]["CLocation"] + ",";
+                        fileBody += "\n";
+                    }
+
+                    fileBody += "\n";
+
+                    // TRAINING TRIALS SECTION
                     trials = (JArray)dataObj["tTrialList"];
 
                     fileBody += "TRAINING TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
+                    fileBody += "Phase,A,B,Type,A Location,B Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -200,11 +259,12 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["A"] + ",";
                         fileBody += trials[i]["B"] + ",";
                         fileBody += trials[i]["type"] + ",";
-                        fileBody += trials[i]["location"] + ",";
+                        fileBody += trials[i]["ALocation"] + ",";
+                        fileBody += trials[i]["BLocation"] + ",";
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testID"] + ",";
                         fileBody += trials[i]["testDesc"] + ",";
                         fileBody += trials[i]["notes"];
                         fileBody += "\n";
@@ -218,8 +278,6 @@ namespace PavlovExperiment.Controllers
                     fileBody += "Second Duration," + dataObj["eSecondDuration"] + "\n";
                     fileBody += "Within Duration," + dataObj["eWithinDuration"] + "\n";
                     fileBody += "Between Duration," + dataObj["eBetweenDuration"] + "\n";
-                    fileBody += "Yes Trials," + dataObj["eYesTrials"] + "\n";
-                    fileBody += "No Trials," + dataObj["eNoTrials"] + "\n";
                     fileBody += "Feedback Enabled," + dataObj["showFeedback"] + "\n";
                     fileBody += "Retraining Limit," + dataObj["retrainLimit"] + "\n";
                     fileBody += "Test Order," + dataObj["eTrialOrder"] + "\n";
@@ -227,29 +285,56 @@ namespace PavlovExperiment.Controllers
                     fileBody += "No Button Location," + dataObj["noLocation"] + "\n";
                     fileBody += "Context Enabled," + dataObj["eContextEnabled"] + "\n";
                     fileBody += "Context Text," + dataObj["eContextText"] + "\n";
+                    fileBody += "Context Location," + dataObj["eContextLoc"] + "\n";
                     fileBody += "Context Yes Text," + dataObj["eContextYesText"] + "\n";
                     fileBody += "Context No Text," + dataObj["eContextNoText"] + "\n\n";
 
                     fileBody += "Symmetry Test Enabled," + dataObj["symmEnabled"] + "\n";
                     fileBody += "Symmetry Pass Criteria," + dataObj["symmPassCriteria"] + "\n";
-                    fileBody += "Symmetry Location 1," + dataObj["symmLocation1"] + "\n";
-                    fileBody += "Symmetry Location 2," + dataObj["symmLocation2"] + "\n";
-                    fileBody += "Symmetry Location 3," + dataObj["symmLocation3"] + "\n";
-                    fileBody += "Symmetry Location 4," + dataObj["symmLocation4"] + "\n";
-                    fileBody += "Symmetry Location 5," + dataObj["symmLocation5"] + "\n";
-                    fileBody += "Symmetry Location 6," + dataObj["symmLocation6"] + "\n\n";
+                    fileBody += "Symmetry Yes Set Trials," + dataObj["symmYesTrials"] + "\n";
+                    fileBody += "Symmetry No Set Trials," + dataObj["symmNoTrials"] + "\n";
+
+                    locations = (JArray)dataObj["symmLocations"];
+
+                    for (int i = 0, j = 0; i < 3; i++, j += 2)
+                    {
+                        fileBody += "B" + (i + 1) + " Location," + locations[j]["ALocation"] + "\n";
+                        fileBody += "A" + (i + 1) + " Location," + locations[j]["BLocation"] + "\n";
+                        fileBody += "C" + (i + 1) + " Location," + locations[j + 1]["ALocation"] + "\n";
+                        fileBody += "B" + (i + 1) + " Location," + locations[j + 1]["BLocation"] + "\n";
+                    }
+
+                    fileBody += "\n";
 
                     fileBody += "Transitivity Test Enabled," + dataObj["transEnabled"] + "\n";
                     fileBody += "Transitivity Pass Criteria," + dataObj["transPassCriteria"] + "\n";
-                    fileBody += "Transitivity Location 1," + dataObj["transLocation1"] + "\n";
-                    fileBody += "Transitivity Location 2," + dataObj["transLocation2"] + "\n";
-                    fileBody += "Transitivity Location 3," + dataObj["transLocation3"] + "\n\n";
+                    fileBody += "Transitivity Yes Set Trials," + dataObj["transYesTrials"] + "\n";
+                    fileBody += "Transitivity No Set Trials," + dataObj["transNoTrials"] + "\n";
+
+                    locations = (JArray)dataObj["transLocations"];
+
+                    for (int i = 0; i < locations.Count; i++)
+                    {
+                        fileBody += "A" + (i + 1) + " Location," + locations[i]["ALocation"] + "\n";
+                        fileBody += "C" + (i + 1) + " Location," + locations[i]["BLocation"] + "\n";
+                    }
+
+                    fileBody += "\n";
 
                     fileBody += "Equivalence Test Enabled," + dataObj["equivEnabled"] + "\n";
                     fileBody += "Equivalence Pass Criteria," + dataObj["equivPassCriteria"] + "\n";
-                    fileBody += "Equivalence Location 1," + dataObj["equivLocation1"] + "\n";
-                    fileBody += "Equivalence Location 2," + dataObj["equivLocation2"] + "\n";
-                    fileBody += "Equivalence Location 3," + dataObj["equivLocation3"] + "\n";
+                    fileBody += "Equivalence Yes Set Trials," + dataObj["equivYesTrials"] + "\n";
+                    fileBody += "Equivalence No Set Trials," + dataObj["equivNoTrials"] + "\n";
+
+                    locations = (JArray)dataObj["equivLocations"];
+
+                    for (int i = 0; i < locations.Count; i++)
+                    {
+                        fileBody += "C" + (i + 1) + " Location," + locations[i]["ALocation"] + "\n";
+                        fileBody += "A" + (i + 1) + " Location," + locations[i]["BLocation"] + "\n";
+                    }
+
+                    fileBody += "\n";
 
                     fileBody += "\n";
 
@@ -257,7 +342,7 @@ namespace PavlovExperiment.Controllers
                     trials = (JArray)dataObj["eTrialList"];
 
                     fileBody += "EVALUATION TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
+                    fileBody += "Phase,A,B,Type,A Location,B Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -265,11 +350,12 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["A"] + ",";
                         fileBody += trials[i]["B"] + ",";
                         fileBody += trials[i]["type"] + ",";
-                        fileBody += trials[i]["location"] + ",";
+                        fileBody += trials[i]["ALocation"] + ",";
+                        fileBody += trials[i]["BLocation"] + ",";
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testID"] + ",";
                         fileBody += trials[i]["testDesc"] + ",";
                         fileBody += trials[i]["notes"];
                         fileBody += "\n";
@@ -281,7 +367,7 @@ namespace PavlovExperiment.Controllers
                     trials = (JArray)dataObj["rtTrialList"];
 
                     fileBody += "RETRAINING TRIALS\n";
-                    fileBody += "Phase,A,B,Type,Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
+                    fileBody += "Phase,A,B,Type,A Location,B Location,Latency,User Answer,Is Correct?,Test Type,Test Name,Notes\n";
 
                     for (var i = 0; i < trials.Count; i++)
                     {
@@ -289,11 +375,12 @@ namespace PavlovExperiment.Controllers
                         fileBody += trials[i]["A"] + ",";
                         fileBody += trials[i]["B"] + ",";
                         fileBody += trials[i]["type"] + ",";
-                        fileBody += trials[i]["location"] + ",";
+                        fileBody += trials[i]["ALocation"] + ",";
+                        fileBody += trials[i]["BLocation"] + ",";
                         fileBody += trials[i]["latency"] + ",";
                         fileBody += trials[i]["userAnswer"] + ",";
                         fileBody += trials[i]["isCorrect"] + ",";
-                        fileBody += trials[i]["test"] + ",";
+                        fileBody += trials[i]["testID"] + ",";
                         fileBody += trials[i]["testDesc"] + ",";
                         fileBody += trials[i]["notes"];
                         fileBody += "\n";
@@ -302,7 +389,7 @@ namespace PavlovExperiment.Controllers
                     fileBody += "\n";
 
                     // write to App_Data
-                    fileName = Server.MapPath("../Data") + "/" + currDate.ToString("yyyyMMdd") + "-" + currID + ".csv";
+                    fileName = Server.MapPath("../Data") + "/" + currDate.ToString("yyyyMMdd-hhmmss") + "-" + currID + ".csv";
                     using (writer = new StreamWriter(fileName))
                     {
                         writer.WriteLine(fileBody);

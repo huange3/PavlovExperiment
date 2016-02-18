@@ -1,12 +1,12 @@
 ﻿@import "https://fonts.googleapis.com/css?family=Open+Sans";
 body{font-family:'Open Sans',sans-serif;font-size:18px;margin:0;padding:0}
 table tr td{vertical-align:top;padding:5px}
-table tr td:first-child{max-width:250px}
-#main-menu{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,0.3);padding:20px}
+table tr td:first-child{max-width:280px}
+#main-menu{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,255,255,0.3);padding:30px}
 .parameters-menu{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden}
 .menu > input[type=radio]:checked + label{color:#27C0DA}
 .menu > input[type=radio]{display:none}
-.menu{width:40%;padding:40px;background:rgba(0,0,0,0.3);text-align:right;float:left;color:#FFF;height:100vh}
+.menu{width:30%;padding:40px;background:rgba(0,0,0,0.3);text-align:right;float:left;color:#FFF;height:100vh}
 .bottom > .btn{margin-right:0}
 .menu-body{background:rgba(255,255,255,0.4);padding:40px;height:100vh;box-sizing:border-box;overflow:auto}
 .options{vertical-align:top}
@@ -19,17 +19,34 @@ table > tbody > tr > td:first-child{text-align:right}
 .small{width:150px}
 select{padding:5px;outline:none}
 input[type=number],input[type=text]{padding:5px;text-align:center;outline:none}
+input:read-only{background:#C2CBCE}
 textarea{font-family:sans-serif;padding:10px;outline:none}
-#data-table{border-spacing:10px}
-#first-stimulus,#second-stimulus,#next-btn,#yes-btn,#no-btn,#response{position:absolute}
+#data-table{border-collapse:collapse}
+#data-table > tbody > tr > th {padding:10px}
+#data-table > tbody > tr > td {padding:10px}
+#data-table > tbody > tr:nth-child(2n) > td {background:#D5DED9}
+#data-table > tbody > tr > td:first-child{max-width:450px;text-align:left}
+#first-stimulus,#second-stimulus,#next-btn,#yes-btn,#no-btn,#response,#context-cue{position:absolute}
 .center{top:50%;left:50%;transform:translate(-50%,-50%)}
-.top-left{top:25%;left:25%}
-.top-right{top:25%;right:25%}
-.bottom-left{bottom:25%;left:25%}
-.bottom-right{bottom:25%;right:25%}
+.top-left{top:15%;left:15%}
+.top-right{top:15%;right:15%}
+.bottom-left{bottom:15%;left:15%}
+.bottom-right{bottom:15%;right:15%}
+.top-center{
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.bottom-center{
+  bottom: 15%;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
 #symmetry-options,#transitivity-options,#equivalence-options{display:none}
-#context-options-pt,#context-options-e{display:none}
+#context-options-pt,#context-options-t,#context-options-e{display:none}
 #cues-pt:checked + #context-options-pt{display:block}
+#cues-t:checked + #context-options-t{display:block}
 #cues-e:checked + #context-options-e{display:block}
 #symmetry:checked + #symmetry-options{display:block}
 #transitivity:checked + #transitivity-options{display:block}
@@ -57,14 +74,16 @@ textarea{font-family:sans-serif;padding:10px;outline:none}
 100%{-webkit-transform:rotate(360deg);-moz-transform:rotate(360deg);-ms-transform:rotate(360deg);-o-transform:rotate(360deg);transform:rotate(360deg)}
 }
 #popup,#instruction{visibility:hidden;opacity:0;position:absolute;top:50%;left:50%;transform:translate(0,-50%);z-index:2000;width:30%;background:#FFF;padding:40px;backface-visibility:hidden}
-#popup{text-align:center}
+#popup, .tcenter{text-align:center}
 #popup.show,#instruction.show{visibility:visible;opacity:1;transform:translate(-50%,-50%);transition:all .2s cubic-bezier(0.25,0.5,0.5,0.9)}
 #popup.show ~ .overlay,#instruction.show ~ .overlay{position:fixed;width:100%;height:100%;top:0;left:0;z-index:1000;background:rgba(0,0,0,0.5);transition:all .2s linear}
 #board{position:fixed;top:0;left:0;height:100%;width:100%;background:#FFF}
-#first-stimulus,#second-stimulus{font-size:64px}
+#first-stimulus,#second-stimulus{font-size:64px;text-align:center}
+#context-cue{font-size:32px;text-align:center}
 #response{font-size:64px}
 #yes-btn,#no-btn{padding:16px 60px;color:#FFF;cursor:pointer}
 #yes-btn{background:#27ae60}
-#yes-btn:hover{background:#1DA054}
+#yes-btn:hover{background:#16924A}
 #no-btn{background:#e74c3c}
 #no-btn:hover{background:#DA3929}
+.mcenter {margin: 0 auto}

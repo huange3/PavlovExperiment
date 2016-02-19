@@ -115,6 +115,10 @@ namespace PavlovExperiment.Controllers
 
                     // PRETRAINING SECTION
                     fileBody += "PRETRAINING\n";
+                    fileBody += "First Duration," + dataObj["ptFirstDuration"] + "\n";
+                    fileBody += "Second Duration," + dataObj["ptSecondDuration"] + "\n";
+                    fileBody += "Within Duration," + dataObj["ptWithinDuration"] + "\n";
+                    fileBody += "Between Duration," + dataObj["ptBetweenDuration"] + "\n";
                     fileBody += "Pass Criteria," + dataObj["ptPassCriteria"] + "\n";
                     fileBody += "Stimulus Trials," + dataObj["ptTrials"] + "\n";
                     fileBody += "Yes Set Trials," + dataObj["ptYesTrials"] + "\n";

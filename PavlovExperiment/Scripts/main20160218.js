@@ -5,6 +5,10 @@ var currExp = {
     "id": "",
     "mode": "",
     // PRETRAINING PARAMETERS
+    "ptFirstDuration": "",
+    "ptSecondDuration": "",
+    "ptWithinDuration": "",
+    "ptBetweenDuration": "",
     "ptPassCriteria": "",
     "ptTrials": "",
     "ptYesTrials": "",
@@ -178,6 +182,10 @@ function loadParameters() {
     if (currObj == null) {
         // load the default settings
         currExp.mode = FullMode;
+        currExp.ptFirstDuration = 1.0;
+        currExp.ptSecondDuration = 1.0;
+        currExp.ptWithinDuration = 0.5;
+        currExp.ptBetweenDuration = 3.0;
         currExp.ptPassCriteria = 0.90;
         currExp.ptTrials = 2;
         currExp.ptYesTrials = 2;
@@ -249,6 +257,10 @@ function mapParameters() {
     $("input:radio[name=mode][value=" + currExp.mode + "]").prop("checked", true);
 
     // PRETRAINING 
+    ptFirstDurationLB.val(currExp.ptFirstDuration);
+    ptSecondDurationLB.val(currExp.ptSecondDuration);
+    ptWithinLB.val(currExp.ptWithinDuration);
+    ptBetweenLB.val(currExp.ptBetweenDuration);
     ptPassCriteriaLB.val(currExp.ptPassCriteria);
     ptTrialsLB.val(currExp.ptTrials);
     ptYesTrialsLB.val(currExp.ptYesTrials);
@@ -475,6 +487,10 @@ function saveParameters() {
     currExp.mode = $("input:radio[name=mode]:checked").val();
 
     // PRETRAINING
+    currExp.ptFirstDuration = ptFirstDurationLB.val();
+    currExp.ptSecondDuration = ptSecondDurationLB.val();
+    currExp.ptWithinDuration = ptWithinLB.val();
+    currExp.ptBetweenDuration = ptBetweenLB.val();
     currExp.ptPassCriteria = ptPassCriteriaLB.val();
     currExp.ptTrials = ptTrialsLB.val();
     currExp.ptYesTrials = ptYesTrialsLB.val();
@@ -1187,10 +1203,10 @@ function setupPretraining() {
 
     shuffleArray(stimulusList);
 
-    firstDuration = 1000;
-    secondDuration = 1000;
-    withinDuration = 500;
-    betweenDuration = 3000;
+    firstDuration = currExp.ptFirstDuration * 1000;
+    secondDuration = currExp.ptSecondDuration * 1000;
+    withinDuration = currExp.ptWithinDuration * 1000;
+    betweenDuration = currExp.ptBetweenDuration * 1000;
 
     currInstructionText = currExp.ptInstructionText;
     board.css("background", "#FFF");

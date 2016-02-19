@@ -41,6 +41,11 @@ var parmArray = [generalParm, pretrainingParm, trainingParm, evaluationParm];
 
 var versionLB = $("#version");
 var participantIDLB = $("#participant-id");
+
+var ptFirstDurationLB = $("#first-duration-pt");
+var ptSecondDurationLB = $("#second-duration-pt");
+var ptWithinLB = $("#within-pt");
+var ptBetweenLB = $("#between-pt");
 var ptPassCriteriaLB = $("#pass-criteria-pt");
 var ptTrialsLB = $("#trials-pt");
 var ptYesTrialsLB = $("#yes-trials-pt");

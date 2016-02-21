@@ -126,12 +126,14 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shared\Constants.cs" />
+    <Compile Include="Shared\Functions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="bell.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Content\Site20160217.css" />
+    <Content Include="Content\Site20160220.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -142,7 +144,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\main20160218.js" />
+    <Content Include="Scripts\main20160220.js" />
     <Content Include="Scripts\mainVariables20160218.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
@@ -161,6 +163,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Shared\settings.json" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

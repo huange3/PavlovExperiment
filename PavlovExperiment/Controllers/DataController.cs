@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Globalization;
 using System.IO;
+using PavlovExperiment.Shared;
 
 namespace PavlovExperiment.Controllers
 {
@@ -420,6 +421,71 @@ namespace PavlovExperiment.Controllers
                 writer = null;
                 dataObj = null;
                 trials = null;
+            }
+        }
+
+        public void LoadSettings()
+        {
+            var currJSON = "";
+            var filePath = Server.MapPath(Constants.filePathSettings);
+
+            try
+            {
+                if (System.IO.File.Exists(filePath))
+                {
+                    StreamReader reader = new StreamReader(filePath);
+
+                    using (reader)
+                    {
+                        currJSON = reader.ReadToEnd();
+                    }
+                }
+
+                if (currJSON == "") currJSON = Functions.writeError("Missing JSON settings file.");
+
+                Response.ContentType = "application/json";
+                Response.Write(currJSON);
+            }
+            catch (Exception e)
+            {
+                currJSON = Functions.writeError("Error occurred while loading settings JSON: " + e.Message);
+                Response.ContentType = "application/json";
+                Response.Write(currJSON);
+            }
+        }
+
+        public void SaveSettings()
+        {
+            var currJSON = "";
+            var filePath = Server.MapPath(Constants.filePathSettings);
+
+            try
+            {
+                currJSON = readRequestStream();
+
+                if (currJSON != "")
+                {
+                    StreamWriter writer = new StreamWriter(filePath, false);
+
+                    using (writer)
+                    {
+                        writer.WriteLine(currJSON);
+                    }
+
+                    currJSON = Functions.writeSuccess("Settings saved successfully!");
+                }
+                else
+                {
+                    currJSON = Functions.writeError("Invalid JSON received. Please try again.");
+                }
+
+                Response.ContentType = "application/json";
+                Response.Write(currJSON);
+            }
+            catch (Exception e)
+            {
+                currJSON = Functions.writeError("Error occurred while saving settings JSON: " + e.Message);
+                Response.Write(currJSON);
             }
         }
 

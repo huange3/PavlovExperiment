@@ -159,11 +159,14 @@ function hideParameterMenu() {
 }
 
 function showParameterMenu() {
-    if (loadParameters()) {
+    spinner.show();
+
+    $.when(loadParameters()).done(function () {
+        spinner.hide();
         mainMenu.hide();
         parameterMenu.show();
         showParms(GeneralID);
-    };
+    });
 };
 
 function showParms(currID) {
@@ -177,72 +180,79 @@ function showParms(currID) {
 }
 
 function loadParameters() {
-    var currObj = localStorage.getObject("experiment");
+    //var currObj = localStorage.getObject("experiment");
+    var currObj = null;
 
-    if (currObj == null) {
-        // load the default settings
-        currExp.mode = FullMode;
-        currExp.ptFirstDuration = 1.0;
-        currExp.ptSecondDuration = 1.0;
-        currExp.ptWithinDuration = 0.5;
-        currExp.ptBetweenDuration = 3.0;
-        currExp.ptPassCriteria = 0.90;
-        currExp.ptTrials = 2;
-        currExp.ptYesTrials = 2;
-        currExp.ptNoTrials = 2;
-        currExp.ptContextEnabled = false;
-        currExp.ptInstructionText = $("#instructions-pt").val();
-        currExp.ptInstructionEvalText = $("#instructions-pte").val();
-        currExp.ptYesPairs = [];
-        currExp.ptNoPairs = [];
+    return $.get("../Data/LoadSettings", function (data) {
+        if (data != null) currObj = data;
 
-        currExp.tFirstDuration = 1.0;
-        currExp.tSecondDuration = 1.0;
-        currExp.tWithinDuration = 0.5;
-        currExp.tBetweenDuration = 3.0;
-        currExp.tTrials = 20;
-        currExp.tSimultaneous = false;
-        currExp.tContextEnabled = false;
-        currExp.tInstructionText = $("#instructions-t").val();
-        currExp.rtInstructionText = $("instructions-rt").val();
-        currExp.stimuliSets = [];
+        console.log(currObj);
 
-        currExp.eFirstDuration = 1.0;
-        currExp.eSecondDuration = 1.0;
-        currExp.eWithinDuration = 0.5;
-        currExp.eBetweenDuration = 3.0; 
-        currExp.showFeedback = false;
-        currExp.retrainLimit = 3;
-        currExp.symmEnabled = true;
-        currExp.symmPassCriteria = 0.90;
-        currExp.symmYesTrials = 3;
-        currExp.symmNoTrials = 3;
-        currExp.symmLocations = [];
+        if (currObj == null) {
+            // load the default settings
+            currExp.mode = FullMode;
+            currExp.ptFirstDuration = 1.0;
+            currExp.ptSecondDuration = 1.0;
+            currExp.ptWithinDuration = 0.5;
+            currExp.ptBetweenDuration = 3.0;
+            currExp.ptPassCriteria = 0.90;
+            currExp.ptTrials = 2;
+            currExp.ptYesTrials = 2;
+            currExp.ptNoTrials = 2;
+            currExp.ptContextEnabled = false;
+            currExp.ptInstructionText = $("#instructions-pt").val();
+            currExp.ptInstructionEvalText = $("#instructions-pte").val();
+            currExp.ptYesPairs = [];
+            currExp.ptNoPairs = [];
 
-        currExp.transEnabled = true;
-        currExp.transPassCriteria = 0.90;
-        currExp.transYesTrials = 3;
-        currExp.transNoTrials = 3;
-        currExp.transLocations = [];
+            currExp.tFirstDuration = 1.0;
+            currExp.tSecondDuration = 1.0;
+            currExp.tWithinDuration = 0.5;
+            currExp.tBetweenDuration = 3.0;
+            currExp.tTrials = 20;
+            currExp.tSimultaneous = false;
+            currExp.tContextEnabled = false;
+            currExp.tInstructionText = $("#instructions-t").val();
+            currExp.rtInstructionText = $("instructions-rt").val();
+            currExp.stimuliSets = [];
 
-        currExp.equivEnabled = true;
-        currExp.equivPassCriteria = 0.90;
-        currExp.equivYesTrials = 3;
-        currExp.equivNoTrials = 3;
-        currExp.equivLocations = [];
+            currExp.eFirstDuration = 1.0;
+            currExp.eSecondDuration = 1.0;
+            currExp.eWithinDuration = 0.5;
+            currExp.eBetweenDuration = 3.0;
+            currExp.showFeedback = false;
+            currExp.retrainLimit = 3;
+            currExp.symmEnabled = true;
+            currExp.symmPassCriteria = 0.90;
+            currExp.symmYesTrials = 3;
+            currExp.symmNoTrials = 3;
+            currExp.symmLocations = [];
 
-        currExp.eTrialOrder = 1;
-        currExp.yesLocation = 4;
-        currExp.noLocation = 5;
-        currExp.eContextEnabled = false;
-        currExp.eInstructionText = $("#instructions-e").val();
-    } else {
-        currExp = currObj;
-    }
+            currExp.transEnabled = true;
+            currExp.transPassCriteria = 0.90;
+            currExp.transYesTrials = 3;
+            currExp.transNoTrials = 3;
+            currExp.transLocations = [];
 
-    mapParameters();
+            currExp.equivEnabled = true;
+            currExp.equivPassCriteria = 0.90;
+            currExp.equivYesTrials = 3;
+            currExp.equivNoTrials = 3;
+            currExp.equivLocations = [];
 
-    return true;
+            currExp.eTrialOrder = 1;
+            currExp.yesLocation = 4;
+            currExp.noLocation = 5;
+            currExp.eContextEnabled = false;
+            currExp.eInstructionText = $("#instructions-e").val();
+        } else {
+            currExp = currObj;
+        }
+
+        mapParameters();
+
+        spinner.hide();
+    });
 }
 
 function mapParameters() {
@@ -255,6 +265,7 @@ function mapParameters() {
 
     // GENERAL
     $("input:radio[name=mode][value=" + currExp.mode + "]").prop("checked", true);
+    participantIDLB.val(currExp.id);
 
     // PRETRAINING 
     ptFirstDurationLB.val(currExp.ptFirstDuration);
@@ -481,6 +492,7 @@ function saveParameters() {
     var secLoc = "";
     var thirdStim = "";
     var thirdLoc = "";
+    var currJSON = "";
 
     currExp.version = versionLB.val();
     currExp.id = participantIDLB.val();
@@ -653,13 +665,26 @@ function saveParameters() {
 
     //console.log(currExp);
 
-    localStorage.setObject("experiment", currExp);
+    //localStorage.setObject("experiment", currExp);
+
+    // Save the settings to a JSON file on the server
+    currJSON = JSON.stringify(currExp);
 
     spinner.show();
-    setTimeout(function () {
-        spinner.hide();
-        showPopup("Parameters saved!");
-    }, 2000);
+
+    return $.post("../Data/SaveSettings", currJSON, function (data) {
+        // delay for user experience
+        
+        setTimeout(function () {
+            spinner.hide();
+
+            if (data["error"] != null) {
+                showPopup(data["error"]);
+            } else {
+                showPopup(data["success"]);
+            }
+        }, 2000);
+    });
 }
 
 Storage.prototype.setObject = function (key, value) {
@@ -687,19 +712,19 @@ function runExperiment() {
 
     spinner.show();
 
-    loadParameters();
+    $.when(loadParameters()).done(function () {
+        if (currExp.mode == PretrainingMode) {
+            runPretraining();
+        } else if (currExp.mode == TrainingMode) {
+            runTraining();
+        } else if (currExp.mode == EvaluationMode) {
+            runEvaluation();
+        } else {
+            runPretraining();
+        }
 
-    if (currExp.mode == PretrainingMode){
-        runPretraining();
-    } else if (currExp.mode == TrainingMode){
-        runTraining();
-    } else if (currExp.mode == EvaluationMode){
-        runEvaluation();
-    } else {
-        runPretraining();
-    }
-
-    spinner.hide();
+        spinner.hide();
+    });
 }
 
 function runTrial() {

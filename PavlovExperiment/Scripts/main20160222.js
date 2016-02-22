@@ -126,7 +126,11 @@ instructionClose.click(function () {
     instruction.toggleClass("show");
 
     if (currPhase == EvaluationPhase) {
-        runEvaluationTrial();
+        if (currExp.eTrialOrder == Mixed) {
+            runEvaluationTrialMixed();
+        } else {
+            runEvaluationTrial();
+        }       
     } else {
         runTrial();
     }
@@ -770,6 +774,7 @@ function runTrial() {
 
                 runTraining();
             } else {
+                console.log("Failed to pass accuracy criteria, going back to pt eval.");
                 setupPretrainingEval();
                 runTrial();
             }
@@ -1255,7 +1260,7 @@ function setupPretrainingEval() {
 
     shuffleArray(stimulusList);
 
-    currPassCriteria = currExp.ptPassCriteria;
+    currPassCriteria = parseFloat(currExp.ptPassCriteria);
     phaseTrialCount = stimulusList.length;
     correctCount = 0;
 
@@ -1633,6 +1638,7 @@ function dumpData() {
     transStimulusList.length = 0;
     equivStimulusList.length = 0;
     stimulusList.length = 0;
+    currExp = null;
 }
 
 function setBtnLocation(btn, locID) {
@@ -1725,7 +1731,7 @@ function checkFeedback(id) {
 function checkAccuracy(){
     var correctNeeded = 0;
 
-    if (currExp.eTrialOrder == Mixed) {
+    if (currPhase == EvaluationPhase && currExp.eTrialOrder == Mixed) {
         // go through all the test types and check for accuracy criteria
         // SYMMETRY
         currPassCriteria = parseFloat(currExp.symmPassCriteria);

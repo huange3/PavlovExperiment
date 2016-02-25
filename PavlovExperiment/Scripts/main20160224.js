@@ -1277,12 +1277,13 @@ function setupPretrainingEval() {
 }
 
 function setupTraining() {
+    var tempArr = [];
     currPhase = TrainingPhase;
 
     stimulusList.length = 0; // clear the array
 
     for (var i = 0; i < TrainingRows; i++) {
-        stimulusList.push({
+        tempArr.push({
             "A": currExp.stimuliSets[i].A,
             "ALocation": currExp.stimuliSets[i].ALocation,
             "B": currExp.stimuliSets[i].B,
@@ -1291,7 +1292,7 @@ function setupTraining() {
             "testID": ""
         });
 
-        stimulusList.push({
+        tempArr.push({
             "A": currExp.stimuliSets[i].B,
             "ALocation": currExp.stimuliSets[i].BLocation,
             "B": currExp.stimuliSets[i].C,
@@ -1301,8 +1302,8 @@ function setupTraining() {
         });
     }
 
-    for (var i = 0; i < currExp.tTrials - 1; i++) {
-        stimulusList = stimulusList.concat(stimulusList);
+    for (var i = 0; i < currExp.tTrials; i++) {
+        stimulusList = stimulusList.concat(tempArr);
     }
 
     shuffleArray(stimulusList);
@@ -1320,12 +1321,13 @@ function setupTraining() {
 }
 
 function setupRetraining() {
+    var tempArr = [];
     currPhase = RetrainingPhase;
 
     stimulusList.length = 0; // clear the array
 
     for (var i = 0; i < TrainingRows; i++) {
-        stimulusList.push({
+        tempArr.push({
             "A": currExp.stimuliSets[i].A,
             "ALocation": currExp.stimuliSets[i].ALocation,
             "B": currExp.stimuliSets[i].B,
@@ -1334,7 +1336,7 @@ function setupRetraining() {
             "testID": ""
         });
 
-        stimulusList.push({
+        tempArr.push({
             "A": currExp.stimuliSets[i].B,
             "ALocation": currExp.stimuliSets[i].BLocation,
             "B": currExp.stimuliSets[i].C,
@@ -1344,8 +1346,8 @@ function setupRetraining() {
         });
     }
 
-    for (var i = 0; i < currExp.tTrials - 1; i++) {
-        stimulusList = stimulusList.concat(stimulusList);
+    for (var i = 0; i < currExp.tTrials; i++) {
+        stimulusList = stimulusList.concat(tempArr);
     }
 
     shuffleArray(stimulusList);
